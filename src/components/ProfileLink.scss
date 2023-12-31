@@ -1,0 +1,55 @@
+@import '../globals.scss';
+@import '../breackpoints.scss';
+
+.userPhotoHolder {
+    width: 55px;
+    height: 55px;
+    box-sizing: border-box;
+    padding: 2px;
+    padding-left: 3.5px;
+
+    @include media('<=phoneS') {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+#myCard {
+    margin-top: 10px;
+    margin-bottom: 5px;
+
+    @include media('<=phoneS') {
+        margin-top: 5px;
+        margin-bottom: 0px;
+    }
+}
+
+#username {
+    font-size: 25px;
+
+    @include media('<=phoneS') {
+        font-size: 20px;
+    }
+}
+
+.userPhoto {
+    width: 100%;
+    height: 100%;
+    background-color: map-get($color-mp, 'iconFill');
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: 90%;
+        height: 90%;
+    }
+}
+
+#viewProfile {
+    font-size: 20px;
+    padding-bottom: 5px;
+    font-weight: bold;
+    color: map-get($font-color, 'bold');
+}

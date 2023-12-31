@@ -1,0 +1,67 @@
+@import './globals.scss';
+@import './breackpoints.scss';
+
+.mainRender {
+    margin-left: 85px;
+
+    @include media('<=tablet') {
+        margin-left: 0px;
+        padding-top: 8vh;
+    }
+}
+
+.navHeader {
+    position: fixed;
+    width: 100vw;
+    height: 8vh;
+    background-color: map-get($color-mp, 'purple');
+    z-index: 2;
+    display: flex;
+    align-items: center;
+
+    @include media('>tablet') {
+        display: none;
+        appearance: none;
+    }
+}
+
+.text {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 8vh;
+
+    img {
+        height: 50%;
+        width: 50%;
+    }
+}
+
+.nav-holder {
+    width: 85px;
+    height: 100vh;
+    position: fixed;
+    transition: ease-in-out .25s, ease-in-out .25s;
+    overflow: clip;
+    z-index: 1;
+    
+    @include media('>tablet') {
+        &:hover {
+            width: 360px;
+        }
+    }
+
+    @include media('<=tablet') {
+        width: 360px;
+        transition: ease-in-out .5s, ease-in-out .5s;
+    }
+}

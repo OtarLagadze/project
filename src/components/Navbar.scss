@@ -1,0 +1,24 @@
+@import '../globals.scss';
+@import '../breackpoints.scss';
+
+.navbar {
+    width: 360px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background-color: map-get($color-mp, 'purple');
+
+    @include media('<=tablet') {
+        width: 300px;
+    }
+}
+
+.menu {
+    position: fixed;
+    z-index: 2;
+}
+
+p {
+    color: map-get($font-color, 'light');
+}

@@ -1,0 +1,116 @@
+@import '../globals.scss';
+@import '../breackpoints.scss';
+
+.wrapper {
+    @include media('<=1440px') {
+        padding-inline: 12vh;
+    }
+    @include media('<=1024px') {
+        padding-inline: 8vh;
+    }
+    padding-inline: 25vh;
+}
+
+.subjects {
+    @include media('<=1440px') {
+        grid-column-gap: 25px;
+        grid-row-gap: 20px;
+    }
+    display: grid;
+    grid-template-columns: repeat(4, minmax(10px,1fr));
+    grid-template-rows: repeat(3, minmax(10px, 1fr));
+    grid-column-gap: 35px;
+    grid-row-gap: 30px;
+    padding-top: 20px;
+    // background-color: red
+}
+
+.subject {
+    @include custom-card;
+    @include media('<=1440px') {
+        height: 140px;
+        font-size: 100%;
+    }
+    @include media('<=1024px') {
+        font-size: 90%;
+        height: 120px;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 170px;
+    font-size: 110%;
+    // font-size: clamp(10px, 140px, 160px);
+}
+
+.list {
+    // margin-inline: 15%;
+    margin-top: 50px;
+    box-sizing: border-box;
+
+    .header {
+        p {
+            @include defont(header);
+            font-size: 40px;
+        }
+
+        input {
+            width: 300px;
+            height: 45px;
+        }
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.problems {
+    // background-color: red;
+    margin-top: 15px;
+
+    .problemsHeader {
+        border-radius: 10px 10px 0px 0px;
+        background-color: map-get($color-mp, 'purple');
+        border: none;
+    }
+}
+
+.problem {
+    background-color: map-get($color-mp, 'default');
+    border-bottom: 3px solid rgba(180, 196, 255, 0.80);
+    height: 60px;
+    display: grid;
+    grid-template-columns: 0.04fr 0.3fr 2fr 1fr repeat(2, 0.5fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+    &:last-child {
+        border: none;
+    }
+
+    .problemChilds {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    #difficulty { grid-area: 1 / 1 / 2 / 2; }
+    #id { grid-area: 1 / 2 / 2 / 3; }
+    #name {
+        @include defont('bold'); 
+        @include media('<=1024px') {
+            font-size: 22px;
+        }
+        justify-content: start; grid-area: 1 / 3 / 2 / 4;
+    }
+    #subject { 
+        justify-content: start; grid-area: 1 / 4 / 2 / 5; 
+        @include media('<=1024px') {
+            font-size: 22px;
+        }
+    }
+    #grade { grid-area: 1 / 5 / 2 / 6; }
+    #count { grid-area: 1 / 6 / 2 / 7; }
+}

@@ -1,0 +1,35 @@
+@import '../globals.scss';
+@import '../breackpoints.scss';
+
+.navElement {
+    display: flex;
+    align-items: center;
+    margin-inline: 10px;
+    margin-top: 15px;
+    padding: 5px;
+    border-radius: 10px;
+    transition: ease-in-out .1s, ease-in-out .1s;
+
+    p {
+        padding-left: 20px;
+    }
+
+    @include media('<=phoneS') {
+        margin-top: 10px;
+
+        p {
+            font-size: 25px;
+        }
+
+        img {
+            width: 45px;
+            height: 45px;
+        }
+    }
+
+    @include media('>tablet'){
+        &:hover {
+            background-color: map-get($color-mp, 'navHover');
+        }
+    }
+}

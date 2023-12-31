@@ -1,0 +1,97 @@
+$font-color: (
+    'light': #E4E6FF,
+    'primary': #324075,
+    'header': #324075,
+    'bold': #324075,
+    'gold': #FFDC22,
+);
+
+$color-mp: (
+    'bg': #D1DBFF,
+    'default': #E3E9FF,
+    'drop': #B8BBFF,
+    'purple': #8E92FC,
+    'navHover': rgba(120, 124, 234, 0.65),
+    'iconFill': #E4E6FF,
+);
+    
+@mixin defont($type){
+    font-size: 30px;
+    font-weight: 400;
+    color: map-get($font-color, $type);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+    @if ($type == 'header') {
+        font-size: 70px;
+    } @else if ($type == 'bold') {
+        font-weight: 700;
+    }
+}
+
+@mixin dots($line) {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: $line;
+    -webkit-box-orient: vertical;
+}
+
+@mixin drop_shadow($y) {
+    box-shadow: 0px $y 0px 0px map-get($color-mp, 'drop');
+}
+
+@mixin custom-card() {
+    background-color: map-get($color-mp, 'default');
+    border-radius: 15px;
+    box-shadow: 0px 6px 0px 0px map-get($color-mp, 'drop');
+    cursor: pointer;
+}
+
+*{
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-decoration: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    @include defont('primary');
+
+    &:focus{
+        outline: none !important;
+    }
+}
+
+body {
+    background-color: map-get($color-mp, 'bg');
+}
+
+input {
+    @include drop_shadow(5px);
+    border: none;
+    border-radius: 8px;
+    background-color: map-get($color-mp, 'default');
+    padding-left: 15px;
+    box-sizing: border-box;
+    font-size: 0.7rem;
+
+    &::placeholder {
+        font-style: italic;
+        color: rgba(50, 64, 117, 0.7);
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: map-get($color-mp, 'bg'); 
+}
+::-webkit-scrollbar-thumb {
+    background: map-get($color-mp, 'drop'); 
+    // border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: map-get($color-mp, 'purple'); 
+} 

@@ -1,0 +1,87 @@
+@import '../globals.scss';
+@import '../breackpoints.scss';
+
+.postsContainer {
+    @include custom-card;
+    margin-inline: 10vw;
+    padding: 25px;
+    position: relative;
+    top: 50px;
+    font-weight: 700;
+    border-radius: 30px;
+    cursor: default;
+
+    h1 {
+        font-weight: 700;
+    }
+}
+
+.postsRow {
+    margin-bottom: 40px;
+}
+
+.postsScroll {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    overflow: auto;
+}
+
+.postsCard {
+    @include custom-card;
+    display: inline-block;
+    border: 3px solid map-get($color-mp, 'drop');
+    background-color: white;
+    width: 350px;
+    height: 400px;
+    display: block;
+    margin-right: 20px;
+    box-sizing: border-box;
+    border-radius: 40px;
+    overflow: hidden;
+    
+}
+
+.postsHOLDER {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.postsPostImage {
+    img {
+        height: 100%;
+        box-shadow: inset 0px 0px 10px rgba(0,0,0,1);
+        overflow: hidden;
+    }
+    height: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // object-fit: contain;
+}
+
+.postsPostName {
+    p {
+        @include defont('primary');
+        font-size: 0.9rem;
+        text-align: center;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 20px;
+    box-sizing: border-box;
+    height: 25%;
+    @include dots(3);
+}
+
+.postsToAll {
+    @include custom-card;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: white;
+}
