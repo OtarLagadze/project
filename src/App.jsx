@@ -13,6 +13,7 @@ import Chat from "./pages/Chat"
 import Profile from "./pages/profile"
 import ProblemsetSubject from "./pages/ProblemsetSubject"
 import ProblemsetProblem from "./pages/ProblemsetProblem"
+import PostsPost from "./pages/PostsPost"
 
 function App() {
   const [active, setActive] = useState(true);
@@ -37,8 +38,7 @@ function App() {
             <Route path="/" element={<Home />} />
 
             <Route path="/posts" element={<Posts />} />
-            <Route path="/posts/:postId" element={<Posts />} />
-            <Route path="/posts/all" element={<Posts />} />
+            <Route path="/posts/:postId" element={<PostsPost />} />
 
             <Route path="/contests" element={<Contest />} />
             <Route path="/class" element={<Class />} />

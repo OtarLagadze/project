@@ -3,12 +3,13 @@
 
 .postsContainer {
     @include custom-card;
-    margin-inline: 10vw;
+    margin-inline: 5vw;
     padding: 25px;
     position: relative;
     top: 50px;
     font-weight: 700;
     border-radius: 30px;
+    margin-bottom: 100px;
     cursor: default;
 
     h1 {
@@ -16,49 +17,39 @@
     }
 }
 
-.postsRow {
-    margin-bottom: 40px;
-}
-
-.postsScroll {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-    overflow: auto;
+.postsHOLDER {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 30px;
+    grid-row-gap: 30px;
 }
 
 .postsCard {
     @include custom-card;
-    display: inline-block;
+    @include drop_shadow(5px);
     border: 3px solid map-get($color-mp, 'drop');
     background-color: white;
-    width: 350px;
-    height: 400px;
-    display: block;
-    margin-right: 20px;
+    // width: 350px;
+    // height: 400px;
     box-sizing: border-box;
-    border-radius: 40px;
+    border-radius: 37px;
     overflow: hidden;
-    
-}
-
-.postsHOLDER {
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
 }
 
 .postsPostImage {
     img {
-        height: 100%;
+        // width: 100%;
+        // height: 100%;
+
         box-shadow: inset 0px 0px 10px rgba(0,0,0,1);
         overflow: hidden;
     }
-    height: 75%;
+    object-fit: cover;
+    // height: 75%;
     display: flex;
     align-items: center;
     justify-content: center;
-    // object-fit: contain;
 }
 
 .postsPostName {
@@ -70,18 +61,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-inline: 20px;
+    padding-inline: 30px;
     box-sizing: border-box;
-    height: 25%;
+    // height: 25%;
     @include dots(3);
-}
-
-.postsToAll {
-    @include custom-card;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    background-color: white;
 }
