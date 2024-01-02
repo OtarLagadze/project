@@ -1,2 +1,138 @@
 @import '../globals.scss';
 @import '../breackpoints.scss';
+
+.postContainer {
+    @include custom-card;
+    cursor: default;
+    position: relative;
+    top: 30px;
+    margin-inline: 15vw;
+    border-radius: 40px;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.postHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+
+    .postHeaderImg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            border: 7px solid map-get($color-mp, 'purple');
+            border-radius: 50%;
+            height: 135px;
+            width: 135px;
+        }
+    }
+
+    .postHeaderTxt {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-left: 20px;
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+        .postInfo {
+            font-style: italic;
+            margin-left: 30px;
+
+            p {
+                color: map-get($font-color, 'gray');
+            }
+        }
+    }
+}
+
+.postTxt {
+    color: map-get($font-color, 'primary');
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+.postPhotoHolder {
+    display: flex;
+    align-items: center;
+    overflow: auto;
+    margin-bottom: 40px;
+
+    img {
+        height: 500px;
+        margin: 5px;
+        // box-sizing: border-box;
+        border-radius: 10px;
+        border: 3px solid map-get($color-mp, 'purple');
+    }
+}
+
+.postAddComment {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+
+    input {
+        background-color: white;
+        border-radius: 15px;
+        width: 100%;
+        height: 100%;
+    }
+
+    button {
+        @include custom-card;
+        border: none;
+        outline: none;
+        background-color: white;
+        height: 100%;
+        padding-inline: 10px;
+        margin-left: 10px;
+        box-sizing: border-box;
+        font-size: .9rem;
+    }
+}
+
+.postComments {
+    // background-color: blue;
+}
+
+.postComment {
+    @include custom-card;
+    cursor: default;
+    background-color: white;
+    // background-color: blue;
+    display: flex;
+    align-items: center;
+    // height: 100px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border-radius: 20px;
+
+    img {
+        max-height: 80px;
+        border-radius: 15px;
+    }
+
+    .postCommentData {
+        margin-left: 10px;
+
+    }
+}
+
+#username {
+    font-family: 900;
+}
+
+p {
+    font-family: map-get($color-mp, 'primary');
+}

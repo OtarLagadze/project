@@ -1,6 +1,7 @@
 import React from 'react'
-import './Posts.scss'
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router'
+import './Posts.scss'
 
 const PostCard = (props) => {
   return (
@@ -31,6 +32,9 @@ function Posts() {
   "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
   "ახალი ოლიმპიადა!", 
   "წლიური შეჯიბრების შედეგები ცნობილია",];
+  const pageCount = 5;
+  let { pageId } = useParams();
+  pageId = parseInt(pageId);
   return (
     <div className='postsContainer'>
       <div className='postsHOLDER'>
@@ -41,6 +45,10 @@ function Posts() {
             )
           })
         }
+      </div>
+      <div className='postsJumpersHolder'>
+        <Link to={`/posts/page/${Math.max(1, pageId - 1)}`} className='postsJumper'>&lt;</Link>
+        <Link to={`/posts/page/${Math.min(pageCount, pageId + 1)}`} className='postsJumper'>&gt;</Link>
       </div>
     </div>
   )

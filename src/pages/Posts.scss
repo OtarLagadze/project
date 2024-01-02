@@ -18,35 +18,31 @@
 }
 
 .postsHOLDER {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    grid-column-gap: 30px;
-    grid-row-gap: 30px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 .postsCard {
     @include custom-card;
-    @include drop_shadow(5px);
+    @include drop_shadow(3px);
     border: 3px solid map-get($color-mp, 'drop');
     background-color: white;
-    // width: 350px;
-    // height: 400px;
+    width: 350px;
+    height: 350px;
     box-sizing: border-box;
     border-radius: 37px;
     overflow: hidden;
+    margin-bottom: 40px;
 }
 
 .postsPostImage {
     img {
-        // width: 100%;
-        // height: 100%;
-
         box-shadow: inset 0px 0px 10px rgba(0,0,0,1);
         overflow: hidden;
     }
     object-fit: cover;
-    // height: 75%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -64,5 +60,26 @@
     padding-inline: 30px;
     box-sizing: border-box;
     // height: 25%;
-    @include dots(3);
+    @include dots(2);
+}
+
+.postsJumpersHolder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // background-color: blue;
+    margin: auto;
+    width: 90px;
+}
+
+.postsJumper {
+    @include custom-card;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-weight: 900;
 }

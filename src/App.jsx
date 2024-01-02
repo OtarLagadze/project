@@ -37,7 +37,7 @@ function App() {
         <Routes>
             <Route path="/" element={<Home />} />
 
-            <Route path="/posts" element={<Posts />} />
+            <Route path="/posts/page/:pageId" element={<Posts />} />s
             <Route path="/posts/:postId" element={<PostsPost />} />
 
             <Route path="/contests" element={<Contest />} />

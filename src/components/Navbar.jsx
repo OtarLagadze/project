@@ -6,7 +6,7 @@ import './Navbar.scss'
 function Navbar() {
   const data = [
     {dir: "/", name: "მთავარი", icon: "home"},
-    {dir: "/posts", name: "პოსტები", icon: "earth"},
+    {dir: "/posts/page/1", name: "პოსტები", icon: "earth"},
     {dir: "/contests", name: "კონტესტები", icon: "medal"},
     {dir: "/class", name: "კლასი", icon: "team"},
     {dir: "/problemset", name: "ამოცანები", icon: "gym"},
