@@ -31,7 +31,7 @@ function Problemset() {
     },
     {
       difficulty: 1,
-      id: 3,
+      id: 4,
       name: "for loop",
       grade: 5,
       subject: "ინფორმატიკა",
@@ -120,7 +120,7 @@ function Problemset() {
       <div className="list">
         <div className="header">
           <p>ყველა ამოცანა</p>
-          <input type='text' placeholder='სახელით ან ნომრით ძებნა'/>
+          <input type='text' placeholder='ნომრით ძებნა'/>
         </div>
 
         <div className="problems">
@@ -145,7 +145,6 @@ function Problemset() {
                   <div className='problemChilds' id="name">{name}</div>
                   <div className='problemChilds' id="subject">{subject}</div>
                   <div className='problemChilds' id="grade">{grade}</div>
-                  <div className='problemChilds' id="count">{count}</div>
                 </Link>
               )
             })

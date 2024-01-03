@@ -10,6 +10,7 @@
     border-radius: 40px;
     padding: 25px;
     box-sizing: border-box;
+    margin-bottom: 70px;
 }
 
 .postHeader {
@@ -69,7 +70,6 @@
     img {
         height: 500px;
         margin: 5px;
-        // box-sizing: border-box;
         border-radius: 10px;
         border: 3px solid map-get($color-mp, 'purple');
     }
@@ -101,18 +101,12 @@
     }
 }
 
-.postComments {
-    // background-color: blue;
-}
-
 .postComment {
     @include custom-card;
     cursor: default;
     background-color: white;
-    // background-color: blue;
     display: flex;
     align-items: center;
-    // height: 100px;
     padding: 10px;
     box-sizing: border-box;
     margin-bottom: 10px;
@@ -126,13 +120,12 @@
     .postCommentData {
         margin-left: 10px;
 
+        p {
+            color: map-get($font-color, 'primary');
+        }  
     }
 }
 
 #username {
-    font-family: 900;
-}
-
-p {
-    font-family: map-get($color-mp, 'primary');
+    font-weight: 900;   
 }

@@ -81,7 +81,7 @@
     border-bottom: 3px solid rgba(180, 196, 255, 0.80);
     height: 60px;
     display: grid;
-    grid-template-columns: 0.04fr 0.3fr 2fr 1fr repeat(2, 0.5fr);
+    grid-template-columns: 0.05fr 0.3fr 3fr 1fr 1fr;
     grid-template-rows: 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
@@ -112,5 +112,4 @@
         }
     }
     #grade { grid-area: 1 / 5 / 2 / 6; }
-    #count { grid-area: 1 / 6 / 2 / 7; }
 }
