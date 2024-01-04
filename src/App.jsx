@@ -5,7 +5,7 @@ import { Route, Routes } from "react-router-dom"
 import Navbar from "./components/Navbar"
 import Home from "./pages/Home"
 import Posts from "./pages/Posts"
-import Contest from "./pages/Contest"
+import Contests from "./pages/Contests"
 import Class from "./pages/Class"
 import Problemset from "./pages/Problemset"
 import Sports from "./pages/Sports"
@@ -14,6 +14,7 @@ import Profile from "./pages/profile"
 import ProblemsetSubject from "./pages/ProblemsetSubject"
 import ProblemsetProblem from "./pages/ProblemsetProblem"
 import PostsPost from "./pages/PostsPost"
+import ClassPage from "./pages/ClassPage"
 
 function App() {
   const [active, setActive] = useState(true);
@@ -25,7 +26,7 @@ function App() {
           <img src="/svg/sidebar/menu.svg" alt="menu"/>
         </div>
         {/* <div className="text">
-          <p>მთავარaი</p>
+          <p>მთავარი</p>
         </div> */}
       </div>
 
@@ -40,8 +41,10 @@ function App() {
             <Route path="/posts/page/:pageId" element={<Posts />} />s
             <Route path="/posts/:postId" element={<PostsPost />} />
 
-            <Route path="/contests" element={<Contest />} />
+            <Route path="/contests" element={<Contests />} />
+            
             <Route path="/class" element={<Class />} />
+            <Route path="/class/:classId/:subject" element={<ClassPage />} />
 
             <Route path="/problemset" element={<Problemset />} />
             <Route path="/problemset/:subject" element={<ProblemsetSubject />} />

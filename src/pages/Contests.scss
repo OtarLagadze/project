@@ -1,0 +1,14 @@
+@import '../globals.scss';
+@import '../breackpoints.scss';
+
+.consWrapper {
+    @include custom-card;
+    cursor: default;
+    position: relative;
+    top: 30px;
+    margin-inline: 30px;
+    border-radius: 40px;
+    padding: 25px;
+    box-sizing: border-box;
+    margin-bottom: 70px;
+}

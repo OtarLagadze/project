@@ -1,0 +1,56 @@
+@import '../globals.scss';
+@import '../breackpoints.scss';
+
+.cpageContainer {
+    @include custom-card;
+    cursor: default;
+    position: relative;
+    top: 30px;
+    margin-inline: 15vw;
+    border-radius: 40px;
+    padding: 25px;
+    box-sizing: border-box;
+    margin-bottom: 70px;
+
+    .cpageHeader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+
+        h1 {
+            font-size: 1.7rem;
+        }
+    }
+}
+
+.cpageTopic {
+    background-color: white;
+    border: 3px solid map-get($color-mp, 'drop');
+    box-sizing: border-box;
+    padding: 20px;
+    padding-top: 15px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    border-radius: 15px;
+
+    h1 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    .cpageLink {
+        a {
+            &:hover {
+                text-decoration: underline;
+            }
+            color: #ff7474;
+            font-style: italic;
+            font-size: .8rem;
+        }
+    }
+
+    .cpageProblem {
+        margin-top: 5px;
+    }
+}
