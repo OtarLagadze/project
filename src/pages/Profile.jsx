@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { auth, provider, signInWithPopup } from '../firebase'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,12 +18,7 @@ function Profile() {
   const userRole = useSelector(selectUserRole);
 
   const handleSignIn = () => {
-    signInWithPopup(auth, provider).then((result) => {
-      dispatch(setActiveUser({
-        userName: result.user.displayName,
-        userPhotoUrl: result.user.photoURL
-      }))
-    }).catch((err) => {
+    signInWithPopup(auth, provider).catch((err) => {
       alert(err.message);
     })
   }

@@ -14,5 +14,19 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new FacebookAuthProvider();
 
+// const handleSignIn = () => {
+//   signInWithPopup(auth, provider).catch((err) => {
+//     alert(err.message);
+//   })
+// }
+
+// const handleSignOut = () => {
+//   auth.signOut().then(() => {
+//     dispatch(setLogOutUser());
+//   }).catch((err) => {
+//     alert(err.message);
+//   })
+// }
+
 export { auth, signInWithPopup, provider };
 export default firebaseApp

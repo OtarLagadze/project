@@ -10,7 +10,7 @@ const Topic = (data) => {
             {
                 data.links.map((link, ind) => {
                     return (
-                        <div className='cpageLink'>
+                        <div className='cpageLink' key={ind}>
                             <a href={link} target='_blank' key={ind}>{link}</a>
                         </div>
                     )
