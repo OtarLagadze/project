@@ -3,11 +3,11 @@ import React, { useEffect } from 'react'
 import { auth, provider, signInWithPopup } from '../firebase'
 import { useDispatch, useSelector } from 'react-redux'
 import { 
-  setActiveUser, 
   setLogOutUser,
   selectUserName,
   selectUserPhotoUrl,
-  selectUserRole
+  selectUserRole,
+  selectUserId
 } from '../features/userSlice'
 
 function Profile() {
@@ -16,6 +16,7 @@ function Profile() {
   const userName = useSelector(selectUserName);
   const userPhotoUrl = useSelector(selectUserPhotoUrl);
   const userRole = useSelector(selectUserRole);
+  const userId = useSelector(selectUserId);
 
   const handleSignIn = () => {
     signInWithPopup(auth, provider).catch((err) => {
@@ -34,6 +35,8 @@ function Profile() {
   return (
     <div>
       <div>{userName}</div>
+      <div>{userId}</div>
+      <div>{userRole}</div>
       <img src={userPhotoUrl}/>
       {
         userName ? (

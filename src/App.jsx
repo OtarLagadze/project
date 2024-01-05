@@ -16,28 +16,53 @@ import ProblemsetProblem from "./pages/ProblemsetProblem"
 import PostsPost from "./pages/PostsPost"
 import ClassPage from "./pages/ClassPage"
 import { auth } from "./firebase"
-import { useDispatch, useSelector } from "react-redux"
-import { selectUserName, setActiveUser } from "./features/userSlice"
+import { useDispatch } from "react-redux"
+import { setActiveUser } from "./features/userSlice"
+import { db } from "./firebase"
+import { doc, getDoc } from "firebase/firestore"
+
+
+const getRole = async () => {
+  const ref = doc(db, 'teachers', 'IYdGyioDJoQyVCZpE8utfYIbJfp1');
+  const data = await getDoc(ref);
+  return data.data();
+}
 
 function App() {
   const [active, setActive] = useState(true);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  const userName = useSelector(selectUserName);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setLoading((userName !== null ? true : false));
-      if (!user) return;
-      dispatch(setActiveUser({
-        userName: user.displayName,
-        userPhotoUrl: user.photoURL
-      }))
-      setLoading(false);
-    })
+    const fetchData = async () => {
+      try {
+        const user = auth.currentUser;
+        setLoading(user ? true : false);
+        if (!user) return;
 
-    return unsubscribe
-  }, [])
+        const docRef = doc(db, 'teachers', user.uid);
+        const docSnap = await getDoc(docRef);
+        const userRole = (docSnap.exists() ? 'teacher' : 'student');
+
+        dispatch(
+          setActiveUser({
+            userName: user.displayName,
+            userPhotoUrl: user.photoURL,
+            userId: user.uid,
+            userRole: userRole,
+          })
+        );
+      } catch (error) {
+        alert(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const unsubscribe = auth.onAuthStateChanged(fetchData);
+
+    return unsubscribe;
+  }, [dispatch]);
 
   return (
     <div className="main">
@@ -71,8 +96,7 @@ function App() {
             <Route path="/sports" element={<Sports />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
-        </Routes>
-        }
+        </Routes> }
       </div>
     </div>
   )

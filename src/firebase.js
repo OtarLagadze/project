@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, FacebookAuthProvider } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,6 +14,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new FacebookAuthProvider();
+const db = getFirestore(firebaseApp);
 
 // const handleSignIn = () => {
 //   signInWithPopup(auth, provider).catch((err) => {
@@ -28,5 +30,5 @@ const provider = new FacebookAuthProvider();
 //   })
 // }
 
-export { auth, signInWithPopup, provider };
+export { auth, signInWithPopup, provider, db };
 export default firebaseApp
