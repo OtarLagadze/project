@@ -20,7 +20,7 @@ function Profile() {
 
   const handleSignIn = () => {
     signInWithPopup(auth, provider).catch((err) => {
-      alert(err.message);
+      console.log(err.message);
     })
   }
 
@@ -28,7 +28,7 @@ function Profile() {
     auth.signOut().then(() => {
       dispatch(setLogOutUser());
     }).catch((err) => {
-      alert(err.message);
+      console.log(err.message);
     })
   }
 

@@ -23,7 +23,7 @@ function ProfileLink() {
                 <p id='viewProfile'>პროფილის ნახვა</p>
                 </>
               ) : (
-                <p id='username'>შედით ანგარიშში</p>
+                <p id='username'>ავტორიზაცია</p>
               )}
           </div>
     </Link>

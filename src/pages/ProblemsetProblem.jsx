@@ -63,7 +63,7 @@ const Choice = ({data}) => {
           userId ? (
             <button onClick={() => {check()}}>დადასტურება</button>
           ) : (
-            <div>ასატვირთად შედით სისტემაში</div>
+            <div>ასატვირთად გაიარეთ ავტორიზაცია</div>
           )
         }
       </div>
@@ -98,7 +98,13 @@ const WriteNumber = ({data}) => {
       <div className='problemSolutionContainer'>
         <input value={val} onChange={(e) => {setVal(e.target.value)}} type='number' className='writeInput'/>
         <div className='problemSubmit'>
-          <button onClick={() => {check()}}>დადასტურება</button>
+        {
+          userId ? (
+            <button onClick={() => {check()}}>დადასტურება</button>
+          ) : (
+            <div>ასატვირთად გაიარეთ ავტორიზაცია</div>
+          )
+        }
         </div>
       </div>
     </div>
