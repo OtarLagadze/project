@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router'
 import './Posts.scss'
+import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/firestore';
+import { db } from '../firebase';
 
-const PostCard = (props) => {
+const PostCard = ({props}) => {
   return (
     <Link to={`/posts/${props.postId}`} className='postsCard'>
       <div className='postsPostImage'>
-        <img src={"//www.kings.ge/storage/news/UeXCs7CtJZZ6LBCfLKZwp4YV88Ei8VRqf40Fjw28.png"} alt='photo of the year'/>
+        <img src={props.postImage} alt='photo of the year'/>
       </div>
       <div className='postsPostName'>
         <p>{props.postName}</p>
@@ -17,31 +19,45 @@ const PostCard = (props) => {
 }
 
 function Posts() {
-  const data = ["მოგესალმებით, დღეს გაიმართება da dasdfas sdf sdf assd asdf asdf asdf asdf asfd asdf asdf asdf asdf", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic",
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic",
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ჩვენს სკოლაში ახლახანს daemata axali website romelic", 
-  "ახალი ოლიმპიადა!", 
-  "წლიური შეჯიბრების შედეგები ცნობილია",];
-  const pageCount = 5;
   let { pageId } = useParams();
   pageId = parseInt(pageId);
+
+  const [data, setData] = useState([]);
+  const [pageCount, setPageCount] = useState(1);
+
+  useEffect(() => {
+    const fetch = async() => {
+      try {
+        //get posts
+        const ref = collection(db, `postPages/${pageId}/postCards`);
+        const res = await getDocs(query(ref, orderBy('date', 'asc')));
+
+        const obj = res.docs.map((doc) => {
+          const val = doc.data();
+          return {
+            postId: val.id,
+            postName: val.name,
+            postImage: val.image
+          }
+        })
+
+        setData(obj);
+
+        //get pageCount
+        setPageCount((await getDocs(collection(db, 'postPages'))).size);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetch();
+  }, [pageId])
   return (
     <div className='postsContainer'>
       <div className='postsHOLDER'>
         {
-          data.map((name, ind) => {
+          data.map((data, ind) => {
             return (
-              <PostCard postName={name} postId={ind} key={ind}/>
+              <PostCard props={data} key={ind}/>
             )
           })
         }

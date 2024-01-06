@@ -105,8 +105,8 @@ function Problemset() {
 
   return (
     <div className='wrapper'>
-      <div className="subjects">
-        {
+      {/* <div className="subjects"> */}
+        {/* {
           data.map((name, ind) => {
             return (
               <Link to={`/problemset/${name}`} className="subject" key={ind}>
@@ -114,8 +114,8 @@ function Problemset() {
               </Link>
             )
           })
-        }
-      </div>
+        } */}
+      {/* </div> */}
       
       <div className="list">
         <div className="header">

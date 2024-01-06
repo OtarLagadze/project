@@ -21,13 +21,6 @@ import { setActiveUser } from "./features/userSlice"
 import { db } from "./firebase"
 import { doc, getDoc } from "firebase/firestore"
 
-
-const getRole = async () => {
-  const ref = doc(db, 'teachers', 'IYdGyioDJoQyVCZpE8utfYIbJfp1');
-  const data = await getDoc(ref);
-  return data.data();
-}
-
 function App() {
   const [active, setActive] = useState(true);
   const [loading, setLoading] = useState(true);

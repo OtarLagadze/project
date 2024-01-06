@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './ProblemsetProblem.scss'
 import { useParams } from 'react-router'
+import { useSelector } from 'react-redux';
+import { selectUserId } from '../features/userSlice';
 
 const Choice = ({data}) => {
   const variantRefs = data.variants.map(() => useRef(null));
   const mp = new Map();
   const [verdict, setVerdit] = useState(false);
   const [tries, setTries] = useState(0);
+  const userId = useSelector(selectUserId);
   let usedCnt = 0;
 
   data.variants.sort(() => Math.random() - 0.5);
@@ -56,7 +59,13 @@ const Choice = ({data}) => {
         }
       </div>
       <div className='problemSubmit'>
-        <button onClick={() => {check()}}>დადასტურება</button>
+        {
+          userId ? (
+            <button onClick={() => {check()}}>დადასტურება</button>
+          ) : (
+            <div>ასატვირთად შედით სისტემაში</div>
+          )
+        }
       </div>
     </div>
   )
