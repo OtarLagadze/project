@@ -16,14 +16,15 @@ import ProblemsetProblem from "./pages/ProblemsetProblem"
 import PostsPost from "./pages/PostsPost"
 import ClassPage from "./pages/ClassPage"
 import { auth } from "./firebase"
-import { useDispatch } from "react-redux"
-import { setActiveUser } from "./features/userSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { selectUserId, setActiveUser } from "./features/userSlice"
 import { db } from "./firebase"
 import { doc, getDoc } from "firebase/firestore"
 
 function App() {
   const [active, setActive] = useState(true);
   const [loading, setLoading] = useState(true);
+  const userId = useSelector(selectUserId);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -52,6 +53,10 @@ function App() {
       }
     };
 
+    if (userId) {
+      setLoading(false);
+      return;
+    }
     const unsubscribe = auth.onAuthStateChanged(fetchData);
 
     return unsubscribe;
