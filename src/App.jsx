@@ -20,6 +20,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { selectUserId, setActiveUser } from "./features/userSlice"
 import { db } from "./firebase"
 import { doc, getDoc } from "firebase/firestore"
+import AddPost from "./pages/AddPost"
+import PrivateRoute from "./components/PrivateRoute"
+import NotFound from "./components/NotFound"
 
 function App() {
   const [active, setActive] = useState(true);
@@ -79,13 +82,20 @@ function App() {
         <Routes>
             <Route path="/" element={<Home />} />
 
-            <Route path="/posts/page/:pageId" element={<Posts />} />s
+            <Route element={<PrivateRoute role={'teacher'} url='405' />}>
+              <Route path="/addPost" element={<AddPost />} />
+            </Route>
+
+            <Route element={<PrivateRoute role={'nonGuest'} url='/401'/>}>
+              <Route path="/class" element={<Class />} />
+              <Route path="/class/:classId/:subject" element={<ClassPage />} />
+            </Route>
+
+            <Route path="/posts/page/:pageId" element={<Posts />} />
             <Route path="/posts/:postId" element={<PostsPost />} />
 
             <Route path="/contests" element={<Contests />} />
             
-            <Route path="/class" element={<Class />} />
-            <Route path="/class/:classId/:subject" element={<ClassPage />} />
 
             <Route path="/problemset" element={<Problemset />} />
             <Route path="/problemset/:subject" element={<ProblemsetSubject />} />
@@ -94,6 +104,10 @@ function App() {
             <Route path="/sports" element={<Sports />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
+
+            <Route path="401" element={<NotFound msg={'გთხოვთ გაიაროთ ავტორიზაცია'}/>} />
+            <Route path="405" element={<NotFound msg={'თქვენ არ გაქვთ ამ გვერდზე წვდომის უფლება'}/>} />
+            <Route path="*" element={<NotFound msg={'ეს გვერდი არ არსებობს'}/>} />
         </Routes> }
       </div>
     </div>

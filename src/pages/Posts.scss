@@ -83,3 +83,12 @@
     height: 40px;
     font-weight: 900;
 }
+
+.postsAddPost {
+    a {
+        @include custom-card;
+        background-color: white;
+        padding: 10px;
+    }
+    margin-bottom: 35px;
+}

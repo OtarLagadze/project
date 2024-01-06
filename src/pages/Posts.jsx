@@ -4,6 +4,8 @@ import { useParams } from 'react-router'
 import './Posts.scss'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase';
+import { useSelector } from 'react-redux';
+import { selectUserRole } from '../features/userSlice';
 
 const PostCard = ({props}) => {
   return (
@@ -22,6 +24,7 @@ function Posts() {
   let { pageId } = useParams();
   pageId = parseInt(pageId);
 
+  const userRole = useSelector(selectUserRole);
   const [data, setData] = useState([]);
   const [pageCount, setPageCount] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -54,11 +57,17 @@ function Posts() {
     }
     fetch();
   }, [pageId])
+  
   return (
     <>
       {
         !loading && (
         <div className='postsContainer'>
+          { userRole === 'teacher' && 
+            <div className='postsAddPost'>
+              <Link to='/addPost'>პოსტის დამატება</Link>
+            </div>
+          }
           <div className='postsHOLDER'>
             {
               data.map((data, ind) => {

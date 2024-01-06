@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { auth, provider, signInWithPopup } from '../firebase'
 import { useDispatch, useSelector } from 'react-redux'

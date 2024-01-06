@@ -66,6 +66,7 @@ function PostsPost() {
             const docRef = await addDoc(ref, obj);
 
             obj.postId = docRef.id;
+            obj.date = -1;
             setComments([obj, ...comments]);
 
             setAddComment('');
@@ -94,7 +95,7 @@ function PostsPost() {
                     <div className="postHeaderTxt">
                         <h1>{data.name}</h1>
                         <div className="postInfo">
-                            <p id='postDate'>{}</p>
+                            <p id='postDate'>{(new Date(data.date.seconds * 1000)).toLocaleDateString('en-GB')}</p>
                             <p id='postAuthor'>{data.author}</p>
                         </div>
                     </div>
@@ -107,9 +108,9 @@ function PostsPost() {
                         data.postPhotos.map((data, ind) => {
                             return (
                                 <img className='postScrollImg' alt='photo' src={data} key={ind} />
-                                )
-                            })
-                        }
+                            )
+                        })
+                    }
                 </div>
                 
                 {
@@ -126,8 +127,8 @@ function PostsPost() {
                         </div>
                     ) : (
                         <div className='postAddComment'>კომენტარის ასატვირთად გაიარეთ ავტორიზაცია</div>
-                        )
-                    }
+                    )
+                }
 
                 <div className="postComments">
                     {
@@ -138,8 +139,10 @@ function PostsPost() {
                                     <div className="postCommentData">
                                         <p id='username'>{data.name}</p>
                                         <p>{data.comment}</p>
-                                        <div>
-                                            <p>{(new Date(data.date.seconds * 1000)).toLocaleDateString('en-GB')}</p>
+                                        <div className='postCommentInfo'>
+                                            { data.date !== -1 &&
+                                                <p>{(new Date(data.date.seconds * 1000)).toLocaleDateString('en-GB')}</p>
+                                            }
                                             {userId === data.authorId &&
                                                 <p className='postCommentDelete' onClick={() => deleteComment(data.postId)}>წაშლა</p>
                                             }

@@ -124,12 +124,22 @@
             color: map-get($font-color, 'primary');
         }  
 
-        .postCommentDelete {
-            color: #ff7474;
-            font-size: .7rem;
-            font-weight: 900;
-            cursor: pointer;
+        .postCommentInfo {
+            display: flex;
+            align-items: center;
+
+            p {
+                font-size: .6rem;
+            }
+            
+            .postCommentDelete {
+                margin-left: 10px;
+                font-weight: 900;
+                color: #ff7474;
+                cursor: pointer;
+            }
         }
+
     }
 }
 
