@@ -3,15 +3,19 @@ import './ProblemsetProblem.scss'
 import { useParams } from 'react-router'
 import { useSelector } from 'react-redux';
 import { selectUserId } from '../features/userSlice';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+
 
 const Choice = ({data}) => {
+  const userId = useSelector(selectUserId);
   const variantRefs = data.variants.map(() => useRef(null));
   const mp = new Map();
   const [verdict, setVerdit] = useState(false);
   const [tries, setTries] = useState(0);
-  const userId = useSelector(selectUserId);
   let usedCnt = 0;
 
+  // console.log(data);
   data.variants.sort(() => Math.random() - 0.5);
 
   const updateStatus = (variant, index) => {
@@ -36,9 +40,9 @@ const Choice = ({data}) => {
 
   const check = () => {
     let ans = true;
-    if (usedCnt != data.answers.length) ans = false;
-    for (let i = 0; i < data.answers.length; i++) {
-      if (mp.get(data.answers[i]) !== true) ans = false;
+    if (usedCnt != data.solutions.length) ans = false;
+    for (let i = 0; i < data.solutions.length; i++) {
+      if (mp.get(data.solutions[i]) !== true) ans = false;
     }
     setVerdit(ans);
     setTries(tries + 1);
@@ -71,19 +75,8 @@ const Choice = ({data}) => {
   )
 }
 
-const Order = (data) => {
-  return (
-    <div className='problemSolutionContainer'>order</div>
-  )
-}
-
-const PlaceIn = (data) => {
-  return (
-    <div className='problemSolutionContainer'>placeIn</div>
-  )
-}
-
 const WriteNumber = ({data}) => {
+  const userId = useSelector(selectUserId);
   const [val, setVal] = useState('');
 
   const check = () => {
@@ -112,53 +105,47 @@ const WriteNumber = ({data}) => {
 }
 
 const ProblemSolution = ({data}) => {
-  const { problemId } = useParams();
-  if (data[problemId - 1].type === "4choice") return <Choice data={data[problemId - 1]}/>
+  return <Choice data={data}/>
+  if (data[problemId - 1].type === "choice") return <Choice data={data[problemId - 1]}/>
   if (data[problemId - 1].type === "order") return <Order data={data[problemId - 1]}/>
   if (data[problemId - 1].type === "placeIn") return <PlaceIn data={data[problemId - 1]}/>
   if (data[problemId - 1].type === "writeNumber") return <WriteNumber data={data[problemId - 1]}/>
 }
 
 function ProblemsetProblem() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { problemId } = useParams();
-  const data = {
-      "id": 1,
-      "name": "მეგატვინი 2020",
-      "statement": "AiaSoft-ზე ხშირად იმართება ხოლმე შეჯიბრებები დაპროგრამებაში. დღევანდელ, 2020 წლის ფინალურ შეჯიბრზე კი გადაწყდება ვინ გახდება მეგატვინი 2020-ის წოდების მფლობელი. ამ წოდების მოსაპოვებლად თქვენ შემდეგი ამოცანის ამოხსნა დაგჭირდებათ:მოცემულია N რიცხვიანი მიმდევრობა. განვიხლილოთ ამ მიმდევრობის ყველა შესაძლო ქვემიმდევრობა და მათი ჯამები. თქვენი მიზანია იპოვოთ ქვემიმდევრობები, რომლეთა ელემენტების ჯამის X-ზე დაქსორვისას (XOR) მინიმალურ რიცხვს ვიღებთ. * XOR - გამომრიცხავი ან ოპერაციაა",
-      "contestId": 0,
-      "solutions": [
-        {
-          "type": "4choice",
-          "variants": ["ვარიანტი 1", "ვარიანტი 2", "ვარიანტი 3", "ვარიანტი 4", "varianti 5", "varianti 6", "varianti 7"],
-          "answers": ["ვარიანტი 1", "ვარიანტი 3"]
-        },
-        {
-          "type": "order",
-          "variants": ["ვარიანტი 1", "ვარიანტი 2", "ვარიანტი 3", "ვარიანტი 4"],
-          "answer": ["ვარიანტი 4", "ვარიანტი 3", "ვარიანტი 2", "ვარიანტი 1"]
-        },
-        {
-          "type": "placeIn",
-          "variants": ["ვარიანტი 1", "ვარიანტი 2", "ვარიანტი 3", "ვარიანტი 4"],
-          "answer": ["ვარიანტი 1", "ვარიანტი 3", "ვარიანტი 2", "ვარიანტი 4"]
-        },
-        {
-          "type": "writeNumber",
-          "answer": -11
-        },
-      ]
-  }
+  useEffect(() => {
+    const fetch = async () => {
+        try {
+            const ref = doc(db, 'problems', problemId);
+            const res = await getDoc(ref);
+
+            setData(res.data());
+        } catch (err) {
+            console.log(err);
+        } finally {
+            console.log(data);
+            setLoading(false);
+        }
+      }
+        
+      fetch();
+    }, [problemId])
 
   return (
+    <> { !loading &&
     <div className='problemContainer'>
       <div className="problemHeader">
         <h1>{data.name}</h1>
       </div>
       <div className="problemStatement">
-        <p>{data.statement}</p>
+        <p>{data.problemStatement}</p>
       </div>
-      <ProblemSolution data={data.solutions}/>
+      <ProblemSolution data={data}/>
     </div>
+    }</>
   )
 }
 

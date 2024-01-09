@@ -15,6 +15,7 @@ import ProblemsetSubject from "./pages/ProblemsetSubject"
 import ProblemsetProblem from "./pages/ProblemsetProblem"
 import PostsPost from "./pages/PostsPost"
 import ClassPage from "./pages/ClassPage"
+import AddProblem from "./pages/AddProblem"
 import { auth } from "./firebase"
 import { useDispatch, useSelector } from "react-redux"
 import { selectUserId, setActiveUser } from "./features/userSlice"
@@ -82,8 +83,9 @@ function App() {
         <Routes>
             <Route path="/" element={<Home />} />
 
-            <Route element={<PrivateRoute role={'teacher'} url='405' />}>
+            <Route element={<PrivateRoute role={'teacher'} url='/405' />}>
               <Route path="/addPost" element={<AddPost />} />
+              <Route path="/addProblem" element={<AddProblem />} />
             </Route>
 
             <Route element={<PrivateRoute role={'nonGuest'} url='/401'/>}>
@@ -97,16 +99,16 @@ function App() {
             <Route path="/contests" element={<Contests />} />
             
 
-            <Route path="/problemset" element={<Problemset />} />
-            <Route path="/problemset/:subject" element={<ProblemsetSubject />} />
+            <Route path="/problemset/:pageId" element={<Problemset />} />
+            {/* <Route path="/problemset/:pageId" element={<ProblemsetSubject />} /> */}
             <Route path="/problemset/problem/:problemId" element={<ProblemsetProblem />} />
 
             <Route path="/sports" element={<Sports />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
 
-            <Route path="401" element={<NotFound msg={'გთხოვთ გაიაროთ ავტორიზაცია'}/>} />
-            <Route path="405" element={<NotFound msg={'თქვენ არ გაქვთ ამ გვერდზე წვდომის უფლება'}/>} />
+            <Route path="/401" element={<NotFound msg={'გთხოვთ გაიაროთ ავტორიზაცია'}/>} />
+            <Route path="/405" element={<NotFound msg={'თქვენ არ გაქვთ ამ გვერდზე წვდომის უფლება'}/>} />
             <Route path="*" element={<NotFound msg={'ეს გვერდი არ არსებობს'}/>} />
         </Routes> }
       </div>

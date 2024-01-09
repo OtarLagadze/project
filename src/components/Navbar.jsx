@@ -9,7 +9,7 @@ function Navbar() {
     {dir: "/posts/page/1", name: "პოსტები", icon: "earth"},
     {dir: "/contests", name: "კონტესტები", icon: "medal"},
     {dir: "/class", name: "კლასი", icon: "team"},
-    {dir: "/problemset", name: "ამოცანები", icon: "gym"},
+    {dir: "/problemset/1", name: "ამოცანები", icon: "gym"},
     // {dir: "/sports", name: "სპორტი", icon: "sports"},
     // {dir: "/chat", name: "ჩატი", icon: "chat"},
     // {dir: "/profile", name: "პროფილი", icon: "medal"},

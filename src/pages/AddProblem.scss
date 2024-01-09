@@ -1,0 +1,18 @@
+@import '../globals.scss';
+@import '../breackpoints.scss';
+
+
+.addProblemVariant {
+  @include custom-card;
+  background-color: white;
+  padding: 5px;
+  box-sizing: border-box;
+  width: min-content;
+  margin-bottom: 10px;
+  margin-right: 5px;
+}
+
+.addProblemHolder {
+  display: flex;
+  flex-wrap: wrap;
+}
