@@ -48,9 +48,17 @@
             font-style: italic;
             font-size: .8rem;
         }
+        margin-bottom: 5px;
+        // background-color: blue;
     }
 
     .cpageProblem {
-        margin-top: 5px;
+        @include custom-card;
+        background-color: map-get($color-mp, 'default');
+        padding: 5px;
+        box-sizing: border-box;
+        font-size: .9rem;
+        margin-right: 5px;
+        margin-top: 10px;
     }
 }

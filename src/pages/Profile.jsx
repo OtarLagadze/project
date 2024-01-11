@@ -7,7 +7,8 @@ import {
   selectUserName,
   selectUserPhotoUrl,
   selectUserRole,
-  selectUserId
+  selectUserId,
+  selectUserClassGroups
 } from '../features/userSlice'
 
 function Profile() {
@@ -17,6 +18,7 @@ function Profile() {
   const userPhotoUrl = useSelector(selectUserPhotoUrl);
   const userRole = useSelector(selectUserRole);
   const userId = useSelector(selectUserId);
+  const userClassGroups = useSelector(selectUserClassGroups);
 
   const handleSignIn = () => {
     signInWithPopup(auth, provider).catch((err) => {
@@ -37,6 +39,15 @@ function Profile() {
       <div>{userName}</div>
       <div>{userId}</div>
       <div>{userRole}</div>
+      <div>
+        { userClassGroups &&
+          userClassGroups.map(({classId, subject}, ind) => {
+            return (
+              <div key={ind}>{classId} {subject}</div>
+            )
+          })
+        }
+      </div>
       <img src={userPhotoUrl}/>
       {
         userName ? (

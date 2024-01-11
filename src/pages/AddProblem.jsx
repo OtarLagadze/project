@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './AddProblem.scss'
 import './AddPost.scss'
-import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useSelector } from 'react-redux';
 import { selectUserName } from '../features/userSlice';

@@ -15,7 +15,6 @@ const Choice = ({data}) => {
   const [tries, setTries] = useState(0);
   let usedCnt = 0;
 
-  // console.log(data);
   data.variants.sort(() => Math.random() - 0.5);
 
   const updateStatus = (variant, index) => {
@@ -126,7 +125,6 @@ function ProblemsetProblem() {
         } catch (err) {
             console.log(err);
         } finally {
-            console.log(data);
             setLoading(false);
         }
       }
@@ -142,6 +140,15 @@ function ProblemsetProblem() {
       </div>
       <div className="problemStatement">
         <p>{data.problemStatement}</p>
+        <div className='postPhotoHolder'>
+          {
+            data.problemPhotos.map((img, ind) => {
+              return (
+                <img src={img} key={ind} alt='img' className='postScrollImg'/>
+              )
+            })
+          }
+        </div>
       </div>
       <ProblemSolution data={data}/>
     </div>

@@ -18,17 +18,19 @@ import ClassPage from "./pages/ClassPage"
 import AddProblem from "./pages/AddProblem"
 import { auth } from "./firebase"
 import { useDispatch, useSelector } from "react-redux"
-import { selectUserId, setActiveUser } from "./features/userSlice"
+import { selectUserId, selectUserRole, setActiveUser } from "./features/userSlice"
 import { db } from "./firebase"
 import { doc, getDoc } from "firebase/firestore"
 import AddPost from "./pages/AddPost"
 import PrivateRoute from "./components/PrivateRoute"
 import NotFound from "./components/NotFound"
+import AddTopic from "./pages/AddTopic"
 
 function App() {
   const [active, setActive] = useState(true);
   const [loading, setLoading] = useState(true);
   const userId = useSelector(selectUserId);
+  const userRole = useSelector(selectUserRole);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,16 +40,17 @@ function App() {
         setLoading(user ? true : false);
         if (!user) return;
 
-        const docRef = doc(db, 'teachers', user.uid);
-        const docSnap = await getDoc(docRef);
-        const userRole = (docSnap.exists() ? 'teacher' : 'student');
+        const docRef = doc(db, 'users', user.uid);
+        const res = (await getDoc(docRef)).data()
 
         dispatch(
           setActiveUser({
             userName: user.displayName,
             userPhotoUrl: user.photoURL,
             userId: user.uid,
-            userRole: userRole,
+            userClassId: '10გ',
+            userRole: res.role,
+            userClassGroups: res.role === 'teacher' ? res.classGroups : []
           })
         );
       } catch (error) {
@@ -86,6 +89,10 @@ function App() {
             <Route element={<PrivateRoute role={'teacher'} url='/405' />}>
               <Route path="/addPost" element={<AddPost />} />
               <Route path="/addProblem" element={<AddProblem />} />
+            </Route>
+
+            <Route element={<PrivateRoute role={'containClass'} url='/405' />}>
+              <Route path="/addTopic/:classId/:subject" element={<AddTopic />} />
             </Route>
 
             <Route element={<PrivateRoute role={'nonGuest'} url='/401'/>}>

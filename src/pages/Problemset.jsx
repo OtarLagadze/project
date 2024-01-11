@@ -47,8 +47,6 @@ function Problemset() {
         console.log(err);
       } finally {
         setLoading(false);
-        console.log(totalProblems);
-        console.log(problems);
       }
     }
     fetch();
@@ -99,7 +97,7 @@ function Problemset() {
 
       <div className='postsJumpersHolder'>
         <Link to={`/problemset/${Math.max(1, pageId - 1)}`} className='postsJumper'>&lt;</Link>
-        <Link to={`/problemset/${Math.min((totalProblems + pageProblemCount - 1) / pageProblemCount, pageId + 1)}`} className='postsJumper'>&gt;</Link>
+        <Link to={`/problemset/${Math.min(Math.floor((totalProblems + pageProblemCount - 1) / pageProblemCount), pageId + 1)}`} className='postsJumper'>&gt;</Link>
       </div>
     </div> }
   </>

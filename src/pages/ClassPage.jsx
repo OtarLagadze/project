@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import './classPage.scss'
 import { Link } from 'react-router-dom';
+import { db } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import { useSelector } from 'react-redux';
+import { selectUserRole } from '../features/userSlice';
 
-const Topic = (data) => {
+const Topic = ({data}) => {
     return (
         <div className='cpageTopic'>
             <h1>{data.name}</h1>
+            {
+                data.comment
+            }
             {
                 data.links.map((link, ind) => {
                     return (
@@ -20,9 +27,9 @@ const Topic = (data) => {
             {
                 data.problems.map((problem, ind) => {
                     return (
-                        <div className='cpageProblem' key={ind}>
-                            <Link to={`/problemset/problem/${problem}`}>{problem}</Link>
-                        </div>
+                        <Link key={ind} to={`/problemset/problem/${problem}`} className='cpageProblem'>
+                            {problem}
+                        </Link>
                     )
                 })
             }
@@ -32,27 +39,38 @@ const Topic = (data) => {
 
 function ClassPage() {
   const params = useParams();
-  const data = [
-	{
-		"name": "კვადრატული განტოლება",
-		"links": ["https://ka.wikipedia.org/wiki/%E1%83%99%E1%83%95%E1%83%90%E1%83%93%E1%83%A0%E1%83%90%E1%83%A2%E1%83%A3%E1%83%9A%E1%83%98_%E1%83%92%E1%83%90%E1%83%9C%E1%83%A2%E1%83%9D%E1%83%9A%E1%83%94%E1%83%91%E1%83%90", "https://www.youtube.com/watch?v=baaQzB0IVpA&ab_channel=SilkSchool"],
-		"problems": [1, 2, 3, 4, 5, 23, 12, 11, 123, 432, 120, 551]
-	},
+  const [data, setData] = useState([]);
+  const userRole = useSelector(selectUserRole);
+  useEffect(() => {
+    const fetch = async () => {
+        try {
+            const ref = collection(db, `classGroups/${params.classId}/subjects/${params.subject}/topics`);
+            const res = await getDocs(ref);
+            setData(res.docs.map(doc => ({
+                name: doc.id,
+                links: doc.data().links,
+                problems: doc.data().problems,
+                comment: doc.data().comment
+            })));
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
-	{
-		"name": "კვადრატული განტოლება",
-		"links": ["https://ka.wikipedia.org/wiki/%E1%83%99%E1%83%95%E1%83%90%E1%83%93%E1%83%A0%E1%83%90%E1%83%A2%E1%83%A3%E1%83%9A%E1%83%98_%E1%83%92%E1%83%90%E1%83%9C%E1%83%A2%E1%83%9D%E1%83%9A%E1%83%94%E1%83%91%E1%83%90", "https://www.youtube.com/watch?v=baaQzB0IVpA&ab_channel=SilkSchool"],
-		"problems": [23, 12, 111, 1232, 3, 120, 551]
-	}
-]
+    fetch();
+  }, [params])
+
   return (
     <div className='cpageContainer'>
+        { userRole === 'teacher' && 
+            <Link to={`/addTopic/${params.classId}/${params.subject}`}>დამატება</Link>
+        }
         <div className="cpageHeader">
             <h1>{params.subject}</h1>
         </div>
         {
-            data.map(({name, links, problems}, ind) => {
-                return <Topic name={name} links={links} problems={problems} key={ind} />
+            data.map((data, ind) => {
+                return <Topic data={data} key={ind} />
             })
         }
     </div>
