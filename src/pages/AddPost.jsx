@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './AddPost.scss'
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useSelector } from 'react-redux';
 import { selectUserName, selectUserPhotoUrl } from '../features/userSlice';
@@ -36,16 +36,31 @@ function AddPost() {
   }
 
   const submit = async () => {
+    if (postName === ''
+    || postText === ''
+    || photos.length === 0) {
+      alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
+      return;
+    }
+    let num = 1;
+    try {
+      num = (await getDoc(doc(db, 'posts', 'countDoc'))).data().count;
+    } finally {
     try {
       const obj = {
+        number: num + 1,
         author: userName,
         authorImage: userImage,
+        date: serverTimestamp(),
         name: postName,
         postPhotos: photos,
         postText: postText
       }
-      const ref = collection(db, 'postRequests');
-      await addDoc(ref, obj);
+      const ref = doc(db, 'posts', `${num + 1}`);
+      await setDoc(ref, obj); 
+
+      const cntRef = doc(db, 'posts', 'countDoc');
+      await updateDoc(cntRef, {count: num + 1});
     } catch (err) {
       console.log(err);
     } finally {
@@ -56,6 +71,7 @@ function AddPost() {
       setPostText('');
       setPhotos([]);
     }
+  }
   }
 
   return (

@@ -3,14 +3,14 @@ import './Problemset.scss'
 import { Link, useParams } from "react-router-dom"
 import { useSelector } from 'react-redux';
 import { selectUserRole } from '../features/userSlice';
-import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 
 function Problemset() {
   const userRole = useSelector(selectUserRole);
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [totalProblems, setTotalProblems] = useState(1);
+  const [totalProblems, setTotalProblems] = useState(0);
   const pageProblemCount = 20;
 
   let { pageId } = useParams();
@@ -22,7 +22,7 @@ function Problemset() {
         const ref = collection(db, `problems`);
         const low = (pageId - 1) * pageProblemCount;
         const high = pageId  * pageProblemCount;
-        const res = await getDocs(query(ref, where('number', '>=', low, where('number', '<=', high))));
+        const res = await getDocs(query(ref, where('number', '>=', low), where('number', '<=', high)));
         const obj = res.docs.map((doc) => {
           const val = doc.data();
           return {
@@ -41,14 +41,15 @@ function Problemset() {
         })
 
         setProblems(obj);
-
-        if (totalProblems === -1) setTotalProblems((await getDoc(doc(db, 'problems', 'countDoc'))).data().count);
       } catch (err) {
         console.log(err);
       } finally {
+        window.scrollTo({top: 0, behavior: 'smooth'});
         setLoading(false);
+        setTotalProblems((await getDoc(doc(db, 'problems', 'countDoc'))).data().count);
       }
     }
+
     fetch();
   }, [pageId])
 

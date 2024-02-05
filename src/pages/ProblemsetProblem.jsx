@@ -79,7 +79,7 @@ const WriteNumber = ({data}) => {
   const [val, setVal] = useState('');
 
   const check = () => {
-    let ans = (parseInt(val) === data.answer ? true : false);
+    let ans = (parseInt(val) === data.answer ? 'სწორია' : 'არასწორია');
     alert(ans);
     setVal('');
   }

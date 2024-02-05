@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router'
 import './Posts.scss'
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useSelector } from 'react-redux';
 import { selectUserRole } from '../features/userSlice';
@@ -26,33 +26,36 @@ function Posts() {
 
   const userRole = useSelector(selectUserRole);
   const [data, setData] = useState([]);
-  const [pageCount, setPageCount] = useState(1);
+  const [totalPosts, setTotalPosts] = useState(0);
   const [loading, setLoading] = useState(true);
+  const pageCount = 10;
 
   useEffect(() => {
     const fetch = async() => {
       try {
-        //get posts
-        const ref = collection(db, `postPages/${pageId}/postCards`);
-        const res = await getDocs(query(ref, orderBy('date', 'asc')));
+        const low = (pageId - 1) * pageCount;
+        const high = pageId  * pageCount;
+        const ref = collection(db, `posts`);
+        const res = await getDocs(query(ref, where('number', '>=', low), where('number', '<=', high)));
 
         const obj = res.docs.map((doc) => {
           const val = doc.data();
+          const img = val.postPhotos;
+          // console.log(img[0]);
           return {
-            postId: val.id,
+            postId: doc.id,
             postName: val.name,
-            postImage: val.image
+            postImage: (img[0] ? img[0] : "")
           }
         })
 
         setData(obj);
-
-        //get pageCount
-        setPageCount((await getDocs(collection(db, 'postPages'))).size);
       } catch (err) {
         console.log(err);
       } finally {
+        window.scrollTo({top: 0, behavior: 'smooth'});
         setLoading(false);
+        setTotalPosts((await getDoc(doc(db, 'posts', 'countDoc'))).data().count);
       }
     }
     fetch();
@@ -79,7 +82,7 @@ function Posts() {
           </div>
           <div className='postsJumpersHolder'>
             <Link to={`/posts/page/${Math.max(1, pageId - 1)}`} className='postsJumper'>&lt;</Link>
-            <Link to={`/posts/page/${Math.min(pageCount, pageId + 1)}`} className='postsJumper'>&gt;</Link>
+            <Link to={`/posts/page/${Math.min(Math.floor((totalPosts + pageCount - 1) / pageCount), pageId + 1)}`} className='postsJumper'>&gt;</Link>
           </div>
         </div>)
       }

@@ -61,7 +61,7 @@ function AddProblem() {
 
     try {
       const obj = {
-        number: num,
+        number: num + 1,
         author: userName,
         name: ProblemName,
         subject: subject,
