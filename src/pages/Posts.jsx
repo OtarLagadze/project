@@ -34,7 +34,7 @@ function Posts() {
     const fetch = async() => {
       try {
         const low = (pageId - 1) * pageCount;
-        const high = pageId  * pageCount;
+        const high = pageId * pageCount;
         const ref = collection(db, `posts`);
         const res = await getDocs(query(ref, where('number', '>=', low), where('number', '<=', high)));
 

@@ -83,6 +83,16 @@ input {
     }
 }
 
+select {
+    border-radius: 5px;
+    margin: 5px;
+    font-size: .9rem;
+
+    option {
+        font-size: .9rem;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

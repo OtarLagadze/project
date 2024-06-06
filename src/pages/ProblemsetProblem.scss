@@ -78,6 +78,8 @@
         background-color: rgb(85, 255, 175);
         box-shadow: 0px 6px 0px 0px rgb(73, 226, 155);
         color: white;
+        box-sizing: border-box;
+        margin-inline: 5px;
     }
 }
 
@@ -89,4 +91,39 @@
     background-color: white;
     font-size: 1.2rem;
     margin-right: 12px;
+}
+
+.problemVariantPoint {
+    margin-left: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50px;
+    background-color: map-get($color-mp, 'purple');
+    z-index: 10;
+}
+
+.problemAnswerPoint {
+    margin-Right: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50px;
+    background-color: map-get($color-mp, 'purple');
+    z-index: 10;
+}
+
+.problemMatchingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-inline: 10%;
+}
+
+.problemMatchingVariants {
+    display: flex;
+    flex-direction: column;
+}
+
+.problemMatchingAnswers {
+    display: flex;
+    flex-direction: column;
 }

@@ -17,6 +17,7 @@
     "react-redux": "^9.0.4",
     "react-router": "^6.14.2",
     "react-router-dom": "^6.14.2",
+    "react-xarrows": "^2.0.2",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "sass": "^1.65.1"

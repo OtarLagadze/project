@@ -25,6 +25,7 @@ import AddPost from "./pages/AddPost"
 import PrivateRoute from "./components/PrivateRoute"
 import NotFound from "./components/NotFound"
 import AddTopic from "./pages/AddTopic"
+import AddTest from "./pages/AddTest"
 
 function App() {
   const [active, setActive] = useState(true);
@@ -89,6 +90,8 @@ function App() {
             <Route element={<PrivateRoute role={'teacher'} url='/405' />}>
               <Route path="/addPost" element={<AddPost />} />
               <Route path="/addProblem" element={<AddProblem />} />
+              <Route path="/addTest" element={<AddTest />} />
+
             </Route>
 
             <Route element={<PrivateRoute role={'containClass'} url='/405' />}>
@@ -98,16 +101,13 @@ function App() {
             <Route element={<PrivateRoute role={'nonGuest'} url='/401'/>}>
               <Route path="/class" element={<Class />} />
               <Route path="/class/:classId/:subject" element={<ClassPage />} />
+              <Route path="/contests" element={<Contests />} />
             </Route>
 
             <Route path="/posts/page/:pageId" element={<Posts />} />
             <Route path="/posts/:postId" element={<PostsPost />} />
 
-            <Route path="/contests" element={<Contests />} />
-            
-
             <Route path="/problemset/:pageId" element={<Problemset />} />
-            {/* <Route path="/problemset/:pageId" element={<ProblemsetSubject />} /> */}
             <Route path="/problemset/problem/:problemId" element={<ProblemsetProblem />} />
 
             <Route path="/sports" element={<Sports />} />

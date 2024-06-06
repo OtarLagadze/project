@@ -1,15 +1,19 @@
 import React from 'react'
 import './Contests.scss'
+import { useSelector } from 'react-redux';
+import { selectUserRole } from '../features/userSlice';
+import { Link } from 'react-router-dom';
 
 function Contests() {
-  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const userRole = useSelector(selectUserRole);
+
   return (
     <div className='consWrapper'>
-      <div className="consBlock">
-        {
-          
-        }
-      </div>
+      { userRole === 'teacher' && 
+        <div className='postsAddPost'>
+          <Link to='/addTest'>ტესტის დამატება</Link>
+        </div>
+      }
     </div>
   )
 }
