@@ -72,6 +72,16 @@ function Contests() {
     return <div className='consWrapper'>იტვირთება...</div>
   }
 
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+  
+    // Ensure two digits for seconds
+    const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+  
+    return `${minutes}წთ და ${formattedSeconds}`;
+  }
+
   return (
     <div className='consWrapper'>
       {
@@ -79,7 +89,7 @@ function Contests() {
           <button className='consStart' onClick={() => dispatch(updateStarted(true))}>დაწყება</button>
         ) : (
           <div className='consWrapper'>
-            <div>{!ended && countdown} {!ended && 'წამი'}</div>
+            <div>{!ended && formatTime(countdown)} {!ended && 'წამი'}</div>
             {
               (index === 20 || ended) ? (
                 <div>
