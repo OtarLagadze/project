@@ -2,13 +2,30 @@
 @import '../breackpoints.scss';
 
 .consWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    img {
+        width: 100%;
+        border-radius: 5px;
+    }
+    margin: 0;
+    .problemContainer {
+        width: 1200px;
+        // background-color: red;
+    }
+}
+
+.consStart {
     @include custom-card;
-    cursor: default;
-    position: relative;
-    top: 30px;
-    margin-inline: 30px;
-    border-radius: 40px;
-    padding: 25px;
+    outline: none;
+    margin-top: 450px;
+    border: none;
     box-sizing: border-box;
-    margin-bottom: 70px;
+    padding: 12px;
+    background-color: rgb(85, 255, 175);
+    box-shadow: 0px 6px 0px 0px rgb(73, 226, 155);
+    color: white;
+    font-size: 0.9rem;
 }

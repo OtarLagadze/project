@@ -1,21 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { selectUserId } from '../../features/userSlice';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserId, updateVerdicts } from '../../features/userSlice';
 
-function Choice({ data }) {
+function Choice({ data, problemInd }) {
   const userId = useSelector(selectUserId);
-  const variantRefs = useRef(data.variants.map(() => useRef(null)));
-  const mp = useRef(new Map());
+  const dispatch = useDispatch();
   const [verdict, setVerdict] = useState(false);
   const [tries, setTries] = useState(0);
-  const [variants, setVariants] = useState(data.variants.sort(() => Math.random() - 0.5));
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! be careful with thiss ^^^^^
+  const [variants, setVariants] = useState(data.variants);
   const [solutions, setSolutions] = useState(data.solutions);
+  const variantRefs = useMemo(() => data.variants.map(() => React.createRef()), [data.variants]);
+  const mp = useRef(new Map());
   let usedCnt = 0;
 
   const updateStatus = (variant, index) => {
-    variantRefs.current[index].current.classList.toggle('problemActive');
-    if (variantRefs.current[index].current.classList.contains('problemActive')) {
+    variantRefs[index].current.classList.toggle('problemActive');
+    if (variantRefs[index].current.classList.contains('problemActive')) {
       mp.current.set(variant, true);
       usedCnt++;
     } else {
@@ -25,13 +25,13 @@ function Choice({ data }) {
   }
 
   useEffect(() => {
-    if (tries > 0) alert(verdict);
     for (let i = 0; i < variants.length; i++) {
-      variantRefs.current[i].current.classList.remove('problemActive');
+      variantRefs[i].current.classList.remove('problemActive');
     }
-    variants.sort(() => Math.random() - 0.5);
+    const shuffledVariants = [...variants].sort(() => Math.random() - 0.5);
+    setVariants(shuffledVariants);
     mp.current.clear();
-  }, [tries, variants]);
+  }, [tries]);
 
   const check = () => {
     let ans = true;
@@ -40,7 +40,9 @@ function Choice({ data }) {
       if (mp.current.get(solutions[i]) !== true) ans = false;
     }
     setVerdict(ans);
+    dispatch(updateVerdicts({ verdict: ans }));
     setTries(tries + 1);
+    window.location.reload();
   }
 
   return (
@@ -48,26 +50,24 @@ function Choice({ data }) {
       <div className="problemTutorial">* აირჩიეთ ყველა სწორი პასუხი</div>
       <div className='problemSolutionContainer'>
         {
-          variants.map((variant, ind) => {
-            return (
-              <button ref={variantRefs.current[ind]} className='problemVariant' key={ind} onClick={() => (updateStatus(variant, ind))}>
-                <p>{variant}</p>
-              </button>
-            )
-          })
+          variants.map((variant, ind) => (
+            <button ref={variantRefs[ind]} className='problemVariant' key={ind} onClick={() => updateStatus(variant, ind)}>
+              <p>{variant}</p>
+            </button>
+          ))
         }
       </div>
       <div className='problemSubmit'>
         {
           userId ? (
-            <button onClick={() => {check()}}>დადასტურება</button>
+            <button onClick={() => { check() }}>დადასტურება</button>
           ) : (
             <div>ასატვირთად გაიარეთ ავტორიზაცია</div>
           )
         }
       </div>
     </div>
-  )
+  );
 }
 
 export default Choice;

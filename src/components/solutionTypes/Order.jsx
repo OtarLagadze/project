@@ -1,14 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { selectUserId } from '../../features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserId, selectVerdicts, updateVerdicts } from '../../features/userSlice';
 
-function Order({ data }) {
+function Order({ data, problemInd }) {
   const userId = useSelector(selectUserId);
   const [variants, setVariants] = useState([]);
   const [correctOrder, setCorrectOrder] = useState([]);
   const [orderedData, setOrderedData] = useState([]);
   const variantRefs = useRef([]);
   const [usedCnt, setUsedCnt] = useState(0);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     shuffleData();
@@ -46,8 +48,9 @@ function Order({ data }) {
     orderedData.forEach((el) => {
       if (correctOrder[el.index - 1] !== el.variant) ans = false;
     });
-    alert(ans);
+    dispatch(updateVerdicts({ verdict: ans }));
     resetSelection();
+    window.location.reload();
   };
 
   return (

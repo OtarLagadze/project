@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { selectUserId } from '../../features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserId, selectVerdicts, updateVerdicts } from '../../features/userSlice';
 import Xarrow from 'react-xarrows';
 
-function Matching({ data }) {
+function Matching({ data, problemInd }) {
   const userId = useSelector(selectUserId);
   const [pairs, setPairs] = useState([]);
   const [lastVariant, setLastVariant] = useState(0);
@@ -13,6 +13,8 @@ function Matching({ data }) {
   const [answers, setAnswers] = useState([]);
   const variantRefs = useRef([]);
   const answerRefs = useRef([]);
+  
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const shuffledVariants = [...data.variants].sort(() => Math.random() - 0.5);
@@ -64,8 +66,9 @@ function Matching({ data }) {
         ans = false;
       }
     })
-    alert(ans);
+    dispatch(updateVerdicts({ verdict: ans }));
     resetSelection();
+    window.location.reload();
   }
 
   return (

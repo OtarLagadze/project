@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
-import { selectUserId } from '../../features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserId, selectVerdicts, updateVerdicts } from '../../features/userSlice';
 
 function WriteNumber({ data }) {
   const userId = useSelector(selectUserId);
   const [val, setVal] = useState('');
 
+  const dispatch = useDispatch();
+
   const check = () => {
     let ans = (parseInt(val) === data.answer ? 'სწორია' : 'არასწორია');
-    alert(ans);
+    dispatch(updateVerdicts({ taskId: problemInd, verdict: ans }));
     setVal('');
   }
 

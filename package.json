@@ -20,6 +20,7 @@
     "react-xarrows": "^2.0.2",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
+    "redux-thunk": "^3.1.0",
     "sass": "^1.65.1"
   },
   "devDependencies": {

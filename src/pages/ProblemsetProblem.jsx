@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import './ProblemsetProblem.scss'
 import { useParams } from 'react-router'
 import { useSelector } from 'react-redux';
-import { selectUserId } from '../features/userSlice';
+import { selectUserId, selectVerdicts } from '../features/userSlice';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import Choice from '../components/solutionTypes/Choice';
@@ -10,17 +10,16 @@ import Order from '../components/solutionTypes/order';
 import Matching from '../components/solutionTypes/Matching';
 import WriteNumber from '../components/solutionTypes/WriteNumber';
 
-const ProblemSolution = ({data}) => {
-  if (data.problemType === "ვარიანტების არჩევა") return <Choice data={data.solutionData}/>
-  if (data.problemType === "დალაგება") return <Order data={data.solutionData}/>
-  if (data.problemType === "შესაბამისობა") return <Matching data={data.solutionData}/>
-  if (data.problemType === "რიცხვის ჩაწერა") return <WriteNumber data={data.solutionData}/>
+const ProblemSolution = ({data, problemInd}) => {
+  if (data.problemType === "ვარიანტების არჩევა") return <Choice data={data.solutionData} problemInd={problemInd} />
+  if (data.problemType === "დალაგება") return <Order data={data.solutionData} problemInd={problemInd} />
+  if (data.problemType === "შესაბამისობა") return <Matching data={data.solutionData} problemInd={problemInd} />
+  if (data.problemType === "რიცხვის ჩაწერა") return <WriteNumber data={data.solutionData} problemInd={problemInd} />
 }
 
-function ProblemsetProblem() {
+function ProblemsetProblem({ problemId, problemInd }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { problemId } = useParams();
 
   useEffect(() => {
     const fetch = async () => {
@@ -57,7 +56,7 @@ function ProblemsetProblem() {
           }
         </div>
       </div>
-      <ProblemSolution data={data}/>
+      <ProblemSolution data={data} problemInd={problemInd}/>
     </div>
     }</>
   )
