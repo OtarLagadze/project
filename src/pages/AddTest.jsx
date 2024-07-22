@@ -1,70 +1,72 @@
-import { Timestamp } from 'firebase/firestore';
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { selectUserClassGroups } from '../features/userSlice';
+import { Timestamp, addDoc, collection } from 'firebase/firestore';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { selectUserClassGroups, selectUserName } from '../features/userSlice';
+import { db } from '../firebase';
+import Calendar from '../components/Calendar';
+import './AddTest.scss';
 
 function AddTest() {
   const userClassGroups = useSelector(selectUserClassGroups);
-  const [date, setDate] = useState('');
-  const [hour, setHour] = useState('');
-  const [minute, setMinute] = useState('');
-  const [chosenClassId, setClassId] = useState('');
+  const userName = useSelector(selectUserName);
+  const [chosenClass, setChosenClass] = useState(userClassGroups[0]);
+  const [date, setDate] = useState(new Date());
+  const [duration, setDuration] = useState('');
 
-  const submit = () => {
-    const [year, month, day] = date.split('-').map(Number);
-    const hourNum = parseInt(hour, 10);
-    const minuteNum = parseInt(minute, 10);
-    
-    const newDate = new Date(year, month - 1, day, hourNum, minuteNum);
-    const timestamp = Timestamp.fromDate(newDate);
-    
-    console.log(timestamp);
-    console.log('Converted Date:', newDate);
+  const submit = async () => {
+    if (isNaN(date.getTime())) {
+      console.error("Invalid date");
+    } else {
+      const timestamp = Timestamp.fromDate(date);
+      const durationMinutes = parseInt(duration, 10);
+      const endDate = new Date(date.getTime() + durationMinutes * 60000);
+      const endTimestamp = Timestamp.fromDate(endDate);
+
+      try {
+        await addDoc(collection(db, 'tests'), {
+          classId: chosenClass.classId,
+          subject: chosenClass.subject,
+          startDate: timestamp,
+          endDate: endTimestamp,
+          duration: durationMinutes,
+          teacher: userName
+        });
+      } catch (e) {
+        console.error('Error writing document: ', e);
+      } finally {
+        window.location.reload();
+      }
+    }
   };
-  
+
   return (
     <div className='addPostContainer'>
-      <select onChange={(e) => setClassId(e.target.value)} value={chosenClassId}>
-        { userClassGroups &&
-          userClassGroups.map(({subject, classId}, ind) => {
-            return (
-              <option value={classId} key={ind}>
-                { classId + ' ' + subject }
-              </option>
-            )
-          })
+      <select onChange={(e) => setChosenClass(JSON.parse(e.target.value))} value={JSON.stringify(chosenClass)}>
+        {userClassGroups &&
+          userClassGroups.map((obj, ind) => (
+            <option value={JSON.stringify(obj)} key={ind}>
+              {obj.classId + ' ' + obj.subject}
+            </option>
+          ))
         }
       </select>
-      <input 
-        type="date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-        required
-      />
+      <div>
+        <Calendar currDate={date} setCurrDate={setDate} />
+      </div>
       <input
         type="number"
-        value={hour}
-        onChange={(e) => setHour(e.target.value)}
+        value={duration}
+        onChange={(e) => setDuration(e.target.value)}
         min="0"
-        max="23"
-        placeholder='საათი'
+        max="300"
+        placeholder='ხანგრძლივობა წუთებში'
         required
       />
-      <input
-        type="number"
-        value={minute}
-        onChange={(e) => setMinute(e.target.value)}
-        min="0"
-        placeholder='წუთი'
-        max="59"
-        required
-      />
-      
       <div className='problemSubmit addPostSubmit'>
-          <button onClick={() => {submit()}}>დადასტურება</button>
+        <button onClick={submit}>დადასტურება</button>
       </div>
     </div>
-  )
+  );
 }
 
-export default AddTest
+export default AddTest;
