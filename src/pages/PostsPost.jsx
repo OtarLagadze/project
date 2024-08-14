@@ -6,7 +6,6 @@ import { selectUserId, selectUserName, selectUserPhotoUrl } from '../features/us
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 
-
 function PostsPost() {
     const { postId } = useParams();
     const userName = useSelector(selectUserName);

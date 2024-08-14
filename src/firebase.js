@@ -3,12 +3,13 @@ import { getAuth, signInWithPopup, FacebookAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyBWRu30JZzcbSoMu-kNo-CrT_SypduGR_o",
+  authDomain: "neoschoolge-8e106.firebaseapp.com",
+  projectId: "neoschoolge-8e106",
+  storageBucket: "neoschoolge-8e106.appspot.com",
+  messagingSenderId: "80977042840",
+  appId: "1:80977042840:web:fc123c7aa19f3ee0fb1fed",
+  measurementId: "G-NJWH5CGBEQ"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);

@@ -1,19 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import './Contests.scss';
 import { useSelector } from 'react-redux';
-import { selectUserRole, selectUserName, selectUserClassId } from '../features/userSlice';
+import { selectUserRole, selectUserName, selectUserClassId } from '@features/userSlice';
 import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 
+const formatDate = (date) => {
+  const options = { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
+  return date.toLocaleString('en-GB', options).replace(/,/, '');
+};
+
 const TestCard = ({ test }) => {
   return (
     <Link to={`/tests/${test.classId}/${test.id}`} key={test.id} className='testItem'>
-      <p>{test.classId}</p>
-      <p>{test.subject}</p>
-      <p> Duration: {test.duration} minutes</p>
-      <p>{new Date(test.startDate.seconds * 1000).toLocaleString()}</p>
+      <div className='testItemRow'>  
+        <p>{test.subject}</p>
+        <p>{test.classId}</p>
+      </div>
+      <div className='testItemRow'>
+        <p>{formatDate(new Date(test.startDate.seconds * 1000))}</p>
+        <div className='testItemTimer'>
+          <img src={`/svg/tests page/timer.svg`} className='icon'/>
+          <p>{test.duration}წთ</p>
+        </div>
+      </div>
     </Link>
+  )
+}
+
+const TestsRow = ({ testType, arr }) => {
+  if (arr.length === 0) return;
+  return (
+    <div className='testsCategory'>
+      <h1> {testType} </h1>
+      <div className='testsRow'>
+        {
+          arr.map(test => (
+            <TestCard test={test} key={test.id} />
+          ))
+        }
+      </div>
+    </div>
   )
 }
 
@@ -75,44 +103,9 @@ function Contests() {
         </div>
       }
       <div className='testsList'>
-        {tests.active.length > 0 && (
-          <div className='testsCategory'>
-            <h1>მიმდინარე</h1>
-            <div className='testsRow'>
-              {tests.active.length > 0 && (
-                tests.active.map(test => (
-                  <TestCard test={test} />
-                ))
-              )}
-            </div>
-          </div>
-        )}
-
-        {tests.upcoming.length > 0 && (
-          <div className='testsCategory'>
-            <h1>დაგეგმილი</h1>
-            <div className='testsRow'>
-              {tests.upcoming.length > 0 && (
-                tests.upcoming.map(test => (
-                  <TestCard test={test} />
-                ))
-              )}
-            </div>
-          </div>
-        )}
-
-        {tests.finished.length > 0 && (
-          <div className='testsCategory'>
-            <h1>დასრულებული</h1>
-            <div className='testsRow'>
-              {tests.finished.length > 0 && (
-                tests.finished.map(test => (
-                  <TestCard test={test} />
-                ))
-              )}
-            </div>
-          </div>
-        )}
+        <TestsRow testType={'მიმდინარე'} arr={tests.active}/>
+        <TestsRow testType={'დაგეგმილი'} arr={tests.upcoming}/>
+        <TestsRow testType={'დასრულებული'} arr={tests.finished}/>
       </div>
     </div>
   );

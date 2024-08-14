@@ -14,6 +14,7 @@ function Calendar({ currDate, setCurrDate }) {
       locale="ka"
       showTimeSelect
       inline
+      minDate={new Date()}
       timeIntervals={5}
       timeFormat="HH:mm"
       timeCaption="დრო"

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { formatTimeLeft } from '@features/formatTimeLeft';
+import TestCountdown from './TestCountdown';
 
 function TestPage() {
   const { classId, testId } = useParams();
@@ -15,7 +17,7 @@ function TestPage() {
         const testDoc = await getDoc(doc(db, 'tests', testId));
         setTestData(testDoc.data());
       } catch (e) {
-        console.error('Error fetching test data: ', e);
+        console.log(e);
       }
     };
 
@@ -32,21 +34,15 @@ function TestPage() {
 
         if (now < startDate) {
           const timeLeft = startDate - now;
-          const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-          const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-          setCountdown(`${hours}h ${minutes}m ${seconds}s`);
-          setStatus('Countdown to Start');
+          setCountdown(formatTimeLeft(timeLeft));
+          setStatus('countdown');
         } else if (now >= startDate && now <= endDate) {
           const timeLeft = endDate - now;
-          const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-          const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-          setCountdown(`${hours}h ${minutes}m ${seconds}s`);
-          setStatus('Running');
+          setCountdown(formatTimeLeft(timeLeft));
+          setStatus('running');
         } else {
           setCountdown('');
-          setStatus('Finished');
+          setStatus('finished');
         }
       };
 
@@ -57,8 +53,9 @@ function TestPage() {
     }
   }, [testData]);
 
-  if (!testData) return;
+  if (!testData) return null;
 
+  if (status === 'countdown') return <TestCountdown testData={testData} display={countdown}/>
   return (
     <div className='testPage'>
       <h1>Test Details</h1>
@@ -69,8 +66,8 @@ function TestPage() {
       <p>Duration: {testData.duration} minutes</p>
       <p>Teacher: {testData.teacher}</p>
       <p>Status: {status}</p>
-      {status === 'Countdown to Start' && <p>Time Left to Start: {countdown}</p>}
-      {status === 'Running' && <p>Time Left to End: {countdown}</p>}
+      {status === 'countdown' && <p>Time Left to Start: {countdown}</p>}
+      {status === 'running' && <p>Time Left to End: {countdown}</p>}
     </div>
   );
 }

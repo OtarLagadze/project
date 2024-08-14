@@ -20,7 +20,8 @@ $color-mp: (
     font-size: 30px;
     font-weight: 400;
     color: map-get($font-color, $type);
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    // font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: Calibri;
 
     @if ($type == 'header') {
         font-size: 70px;
@@ -50,7 +51,8 @@ $color-mp: (
 *{
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    // font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: Calibri;
     text-decoration: none;
     list-style-type: none;
     margin: 0;
