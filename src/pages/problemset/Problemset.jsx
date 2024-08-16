@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import './Problemset.scss'
 import { Link, useParams } from "react-router-dom"
 import { useSelector } from 'react-redux';
-import { selectUserRole } from '../features/userSlice';
+import { selectUserRole } from '@features/userSlice';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '@src/firebaseInit';
 
 function Problemset() {
   const userRole = useSelector(selectUserRole);

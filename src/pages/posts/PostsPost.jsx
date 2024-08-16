@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import './PostsPost.scss'
 import { useSelector } from 'react-redux';
-import { selectUserId, selectUserName, selectUserPhotoUrl } from '../features/userSlice';
+import { selectUserId, selectUserName, selectUserPhotoUrl } from '@features/userSlice';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '@src/firebaseInit';
 
 function PostsPost() {
     const { postId } = useParams();

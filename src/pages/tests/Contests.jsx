@@ -3,7 +3,7 @@ import './Contests.scss';
 import { useSelector } from 'react-redux';
 import { selectUserRole, selectUserName, selectUserClassId } from '@features/userSlice';
 import { Link } from 'react-router-dom';
-import { db } from '../firebase';
+import { db } from '@src/firebaseInit';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 
 const formatDate = (date) => {

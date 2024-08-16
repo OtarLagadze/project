@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { auth, provider, signInWithPopup } from '../firebase'
+import { auth, provider, signInWithPopup } from '../firebaseInit'
 import { useDispatch, useSelector } from 'react-redux'
 import { 
   setLogOutUser,
@@ -9,7 +9,7 @@ import {
   selectUserRole,
   selectUserId,
   selectUserClassGroups
-} from '../features/userSlice'
+} from '@features/userSlice'
 
 function Profile() {
   const dispatch = useDispatch();

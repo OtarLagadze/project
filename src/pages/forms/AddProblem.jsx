@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import './AddProblem.scss'
 import './AddPost.scss'
 import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '@src/firebaseInit';
 import { useSelector } from 'react-redux';
-import { selectUserName } from '../features/userSlice';
+import { selectUserName } from '@features/userSlice';
 
 const ChooseVariants = ({ updateSolutionData }) => {
   const [Variant, setVariant] = useState('');

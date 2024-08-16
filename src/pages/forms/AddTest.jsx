@@ -1,9 +1,9 @@
 import { Timestamp, addDoc, collection } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectUserClassGroups, selectUserName } from '../features/userSlice';
-import { db } from '../firebase';
-import Calendar from '../components/Calendar';
+import { selectUserClassGroups, selectUserName } from '@features/userSlice';
+import { db } from '@src/firebaseInit';
+import Calendar from '@components/Calendar';
 import './AddTest.scss';
 
 function AddTest() {

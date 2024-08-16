@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import './AddPost.scss'
 import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '@src/firebaseInit';
 import { useSelector } from 'react-redux';
-import { selectUserName, selectUserPhotoUrl } from '../features/userSlice';
+import { selectUserName, selectUserPhotoUrl } from '@features/userSlice';
 
 function AddPost() {
   const userName = useSelector(selectUserName);

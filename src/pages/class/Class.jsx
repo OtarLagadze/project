@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom"
 import './Class.scss'
 import { useSelector } from 'react-redux';
-import { selectUserClassGroups, selectUserClassId, selectUserId, selectUserRole } from '../features/userSlice';
+import { selectUserClassGroups, selectUserClassId, selectUserId, selectUserRole } from '@features/userSlice';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '@src/firebaseInit';
 
 function Class() {
   const userRole = useSelector(selectUserRole);

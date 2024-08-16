@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import './ProblemsetProblem.scss'
 import { useParams } from 'react-router'
 import { useSelector } from 'react-redux';
-import { selectUserId } from '../features/userSlice';
+import { selectUserId } from '@features/userSlice';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import Choice from '../components/solutionTypes/Choice';
-import Order from '../components/solutionTypes/order';
-import Matching from '../components/solutionTypes/Matching';
-import WriteNumber from '../components/solutionTypes/WriteNumber';
+import { db } from '@src/firebaseInit';
+import Choice from '@components/solutionTypes/Choice';
+import Order from '@components/solutionTypes/order';
+import Matching from '@components/solutionTypes/Matching';
+import WriteNumber from '@components/solutionTypes/WriteNumber';
 
 const ProblemSolution = ({data}) => {
   if (data.problemType === "ვარიანტების არჩევა") return <Choice data={data.solutionData}/>

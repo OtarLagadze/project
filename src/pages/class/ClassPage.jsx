@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import './classPage.scss'
 import { Link } from 'react-router-dom';
-import { db } from '../firebase';
+import { db } from '@src/firebaseInit';
 import { collection, getDocs } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
-import { selectUserRole } from '../features/userSlice';
+import { selectUserRole } from '@features/userSlice';
 
 const Topic = ({data}) => {
     return (

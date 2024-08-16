@@ -1,12 +1,12 @@
-@import '../globals.scss';
-@import '../breackpoints.scss';
+@import '@src/globals.scss';
+@import '@src/breackpoints.scss';
 
 .addPostContainer {
   @include custom-card;
   margin-inline: 5vw;
   padding: 25px;
   position: relative;
-  top: 50px;
+  top: 50px;  
   font-weight: 700;
   border-radius: 30px;
   margin-bottom: 100px;

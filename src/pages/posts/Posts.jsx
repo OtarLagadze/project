@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router'
-import './Posts.scss'
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '@src/firebaseInit';
 import { useSelector } from 'react-redux';
-import { selectUserRole } from '../features/userSlice';
+import { selectUserRole } from '@features/userSlice';
+import './Posts.scss'
 
 const PostCard = ({props}) => {
   return (
