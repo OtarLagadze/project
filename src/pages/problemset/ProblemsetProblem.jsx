@@ -10,6 +10,7 @@ import Order from '@components/solutionTypes/order';
 import Matching from '@components/solutionTypes/Matching';
 import WriteNumber from '@components/solutionTypes/WriteNumber';
 import { evaluateProblem } from '@features/evaluators/problemEvaluator';
+import { evaluateTest } from '@features/evaluators/testEvaluator';
 
 const ProblemSolution = ({data}) => {
   if (data.problemType === "ვარიანტების არჩევა") return <Choice data={data.solutionData}/>
@@ -23,16 +24,34 @@ function ProblemsetProblem() {
   const [loading, setLoading] = useState(true);
   const { problemId } = useParams();
 
-  const jsonData = {
+  const problem1 = {
       problemType: "რიცხვის ჩაწერა",
-      maxPoint: 5,
-      point: 5,
-      submission: 11,
+      maxPoint: 2,
+      point: 2,
+      submission: 10,
       answer: 10,
   }
 
+  const problem2 = {
+    problemType: "ვარიანტების არჩევა",
+    maxPoint: 4,
+    point: 2,
+    submission: ["1", "2"],
+    answer: ["2", "1"],
+  }
+
+  const problem3 = {
+    problemType: "გამოტოვებული სიტყვები",
+    maxPoint: 6,
+    point: 2,
+    submission: ["1", "3", "2"],
+    answer: ["1", "2", "3"],
+  }
+
+  const test = [problem1, problem2, problem3];
+
   useEffect(() => {
-    console.log(jsonData.maxPoint, evaluateProblem(jsonData));
+    console.log(evaluateTest(test));
     const fetch = async () => {
         try {
             const ref = doc(db, 'problems', problemId);
