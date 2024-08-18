@@ -9,7 +9,7 @@ export function evaluateTest(submissions) {
 
     totalPoints += response.pointsEarned;
     verdicts.push({
-      problemIndex: index + 1,
+      problemIndex: index,
       maxPoint: data.maxPoint,
       pointsEarned: response.pointsEarned,
       verdict: response.verdict
