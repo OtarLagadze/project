@@ -36,10 +36,7 @@ function AddTopic() {
   }, [TopicName, TopicComment, Problems, links]);
 
   const submit = async () => {
-    if (TopicName === ''
-    || TopicComment === '' 
-    || Problems.length === 0
-    || links.length === 0) {
+    if (TopicName === '') {
       alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
       return;
     }
@@ -75,7 +72,6 @@ function AddTopic() {
         onChange={(e) => setTopicName(e.target.value)}
         maxLength={50}
         placeholder='თემის სათაური'
-        required
       />
       <textarea 
         type='text'
@@ -83,7 +79,6 @@ function AddTopic() {
         onChange={(e) => setTopicComment(e.target.value)}
         maxLength={2000}
         placeholder='კომენტარის დატოვება'
-        required
       />
       <div className='addPostRow'>
         <input 

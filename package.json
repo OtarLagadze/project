@@ -21,7 +21,8 @@
     "react-xarrows": "^2.0.2",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
-    "sass": "^1.65.1"
+    "sass": "^1.65.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

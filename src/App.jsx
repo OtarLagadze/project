@@ -26,6 +26,7 @@ import { db, auth } from "@src/firebaseInit"
 import { useDispatch, useSelector } from "react-redux"
 import { selectUserId, selectUserRole, setActiveUser } from "@features/userSlice"
 import { doc, getDoc } from "firebase/firestore"
+import CreateTest from "@pages/forms/CreateTest"
 
 function App() {
   const [active, setActive] = useState(true);
@@ -91,6 +92,7 @@ function App() {
               <Route path="/addPost" element={<AddPost />} />
               <Route path="/addProblem" element={<AddProblem />} />
               <Route path="/addTest" element={<AddTest />} />
+              <Route path="/createTest" element={<CreateTest />} />
 
               <Route element={<PrivateRoute role={'containClass'} url='/405' />}>
                 <Route path="/addTopic/:classId/:subject" element={<AddTopic />} />

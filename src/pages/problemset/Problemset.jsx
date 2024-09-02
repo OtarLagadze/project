@@ -3,7 +3,7 @@ import './Problemset.scss'
 import { Link, useParams } from "react-router-dom"
 import { useSelector } from 'react-redux';
 import { selectUserRole } from '@features/userSlice';
-import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '@src/firebaseInit';
 
 function Problemset() {
@@ -20,9 +20,9 @@ function Problemset() {
     const fetch = async() => {
       try {
         const ref = collection(db, `problems`);
-        const low = (pageId - 1) * pageProblemCount;
-        const high = pageId  * pageProblemCount;
-        const res = await getDocs(query(ref, where('number', '>=', low), where('number', '<=', high)));
+        const high = (await getDoc(doc(db, 'problems', 'countDoc'))).data().count - (pageId - 1) * pageProblemCount;
+        const low = high - pageProblemCount + 1;
+        const res = await getDocs(query(ref, orderBy('problemId', 'desc'), where('problemId', '>=', low), where('problemId', '<=', high)));
         const obj = res.docs.map((doc) => {
           const val = doc.data();
           return {
@@ -33,13 +33,12 @@ function Problemset() {
             difficulty: val.difficulty,
             grade: val.grade,
             name: val.name,
-            number: val.number,
+            number: val.problemId,
             solutions: val.solutions,
             variants: val.variants,
             subject: val.subject
           }
         })
-
         setProblems(obj);
       } catch (err) {
         console.log(err);
@@ -49,7 +48,6 @@ function Problemset() {
         setTotalProblems((await getDoc(doc(db, 'problems', 'countDoc'))).data().count);
       }
     }
-
     fetch();
   }, [pageId])
 

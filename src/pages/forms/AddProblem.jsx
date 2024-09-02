@@ -5,212 +5,10 @@ import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firest
 import { db } from '@src/firebaseInit';
 import { useSelector } from 'react-redux';
 import { selectUserName } from '@features/userSlice';
-
-const ChooseVariants = ({ updateSolutionData }) => {
-  const [Variant, setVariant] = useState('');
-  const [Solution, setSolution] = useState('');
-  const [variants, setVariants] = useState([]);
-  const [solutions, setSolutions] = useState([]);
-
-  useEffect(() => {
-    const storedProblemVariants = localStorage.getItem('ProblemVariants');
-    const storedProblemSolutions = localStorage.getItem('ProblemSolutions');
-
-    if (storedProblemVariants) setVariants(JSON.parse(storedProblemVariants));
-    if (storedProblemSolutions) setSolutions(JSON.parse(storedProblemSolutions));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('ProblemVariants', JSON.stringify(variants));
-    localStorage.setItem('ProblemSolutions', JSON.stringify(solutions));
-    const newData = {
-      variants: [...variants, ...solutions],
-      solutions: solutions
-    }
-    updateSolutionData(newData);
-  }, [variants, solutions]);
-
-  return (
-    <div>
-      <div className='addPostRow'>
-        <input
-          type='text'
-          value={Variant}
-          onChange={(e) => setVariant(e.target.value)}
-          placeholder='ვარიანტის დამატება'
-        />
-        <button onClick={() => {
-          setVariants([Variant, ...variants]);
-          setVariant('');
-        }}>დამატება</button>
-      </div>  
-
-      <div className="addProblemHolder">
-        {
-          variants.map((variant, ind) => {
-            return (
-              <div key={ind} className='addProblemVariant' onClick={() => {
-                setVariants(variants => variants.filter(curr => variant !== curr));
-              }}>{variant}</div>
-            )
-          })
-        }
-      </div>
-
-      <div className='addPostRow'>
-        <input 
-          type='text'
-          value={Solution}
-          onChange={(e) => setSolution(e.target.value)}
-          placeholder='სწორი პასუხის დამატება'
-        />
-        <button onClick={() => {
-          setSolutions([Solution, ...solutions]);
-          setSolution('');
-        }}>დამატება</button>
-      </div>
-      <div className='addProblemHolder'>
-        {
-          solutions.map((solution, ind) => {
-            return (
-              <div key={ind} className='addProblemVariant'
-              onClick={() => {
-                setSolutions(solutions => solutions.filter(curr => solution !== curr));
-              }}>{solution}</div>
-            )
-          })
-        }
-      </div>
-    </div>
-  )
-}
-
-const Matching = ({ updateSolutionData }) => {
-  const [variant, setVariant] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [variants, setVariants] = useState([]);
-  const [answers, setAnswers] = useState([]);
-  const [pairs, setPairs] = useState([]);
-  
-  useEffect(() => {
-    const storedProblemMatchingPairs = localStorage.getItem('ProblemMatchingPairs'); 
-    const storedProblemMatchingVariants = localStorage.getItem('storedProblemMatchingVariants'); 
-    const storedProblemMatchingAnswers = localStorage.getItem('storedProblemMatchingAnswers'); 
-
-    if (storedProblemMatchingPairs) setPairs(JSON.parse(storedProblemMatchingPairs));
-    if (storedProblemMatchingVariants) setPairs(JSON.parse(storedProblemMatchingVariants));
-    if (storedProblemMatchingAnswers) setPairs(JSON.parse(storedProblemMatchingAnswers));
-  }, []);
-  
-  useEffect(() => {
-    localStorage.setItem('ProblemMatchingPairs', JSON.stringify(pairs));
-    localStorage.setItem('storedProblemMatchingVariants', JSON.stringify(pairs));
-    localStorage.setItem('storedProblemMatchingAnswers', JSON.stringify(pairs));
-
-    const newData = {
-      variants: variants,
-      answers: answers,
-      correct: pairs
-    }
-    updateSolutionData(newData);
-  }, [pairs]);
-
-  return (
-    <div>
-      <div className='addPostRow'>
-        <input 
-          type='text'
-          value={variant}
-          onChange={(e) => setVariant(e.target.value)}
-          maxLength={50}
-          placeholder='ვარიანტი'
-          required
-        />
-        <input 
-          type='text'
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-          maxLength={50}
-          placeholder='პასუხი'
-          id='addProblemEdge'
-          required
-        />
-        <button onClick={() => {
-          setPairs(pairs => [...pairs, {variant: variant, answer: answer}]);
-          setVariants([...variants, variant]);
-          setAnswers([...answers, answer]);
-          setVariant('');
-          setAnswer('');
-        }}>დამატება</button>
-      </div>
-      {
-        pairs.map((curr, ind) => {
-          return (
-            <div key={ind}
-              onClick={() => {
-                setPairs(pairs => pairs.filter(val => val !== curr));
-              }}
-            >{curr.variant} - {curr.answer}</div>
-          )
-        })
-      }
-    </div>
-  )
-}
-
-const Order = ({ updateSolutionData }) => {
-  const [variant, setVariant] = useState('');
-  const [order, setOrder] = useState([]);
-
-  useEffect(() => {
-    const storedProblemOrder = localStorage.getItem('ProblemOrder');
-
-    if (storedProblemOrder) setOrder(JSON.parse(storedProblemOrder));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('ProblemOrder', JSON.stringify(order));
-    
-    const variants = [...order];
-    variants.sort(() => Math.random() - 0.5);
-    const newData = {
-      variants: variants,
-      correctOrder: order
-    }
-    updateSolutionData(newData);
-  }, [order]);
-
-  return (
-    <div>
-      <div className='addPostRow'>
-        <input 
-          type='text'
-          value={variant}
-          onChange={(e) => setVariant(e.target.value)}
-          maxLength={50}
-          placeholder='ვარიანტი'
-          required
-        />
-        <button onClick={() => {
-          setOrder(order => [...order, variant])
-          setVariant('');
-        }}>დამატება</button>
-      </div>
-      {
-        order.map((val, ind) => {
-          return (
-            <div 
-              key={ind}
-              onClick={() => {
-                setOrder(order => order.filter(old => old !== val));
-              }}
-            >{ind + 1}. {val}</div>
-          )
-        })
-      }
-    </div>
-  )
-}
+import CreateProblem from '@components/problemCreator/CreateProblem';
+import { validateImage } from '@features/validators/imageValidator';
+import { v4 as uuidv4 } from 'uuid';
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
 function AddProblem() {
   const userName = useSelector(selectUserName);
@@ -219,39 +17,89 @@ function AddProblem() {
   'გეოგრაფია', 'ფიზიკა', 'ქიმია', 'ბიოლოგია', 'ხელოვნება',
   'მუსიკა', 'მოქალაქეობა', 'რუსული'];
   const problemTypes = ['ვარიანტების არჩევა', 'შესაბამისობა', 'დალაგება', 'რიცხვის ჩაწერა', 'ფოტოს ამოცნობა', 'გამოტოვებული სიტყვები'];
+  const [problemPhoto, setProblemPhoto] = useState('');
+  const template = {
+    // id: 0,
+    author: userName,
+    // date: '',
+    name: '',
+    subject: subjects[0],
+    grade: "7",
+    difficulty: "1",
+    statement: '',
+    photos: [],
+    type: problemTypes[0],
+    point: "1",
+    // workplaceData: {
+    //   coefficient: 0,
+    //   display: [],
+    //   answer: [],
+    // },
+    access: 'სატესტო',
+  }
+  const savedData = localStorage.getItem('AddProblemFormData');
+  const [formData, setFormData] = useState((savedData ? JSON.parse(savedData) : template))
+
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem('AddProblemFormData'));
+    if (savedData) {
+      setFormData(savedData);
+    } else {
+      localStorage.setItem('AddProblemFormData', JSON.stringify(formData));
+    }
+  }, [])
   
-  const [grade, setGrade] = useState(7);
-  const [difficulty, setDifficulty] = useState(1);
-  const [subject, setSubject] = useState(subjects[0]);
-  const [ProblemName, setProblemName] = useState('');
-  const [ProblemStatement, setProblemStatement] = useState('');
-  const [ProblemPhoto, setProblemPhoto] = useState('');
-  const [photos, setPhotos] = useState([]);
-  const [problemType, setProblemType] = useState(problemTypes[0]);
-  const [solutionData, setSolutionData] = useState({});
-  const [problemAccess, setProblemAccess] = useState('');
-
   useEffect(() => {
-    const storedProblemName = localStorage.getItem('ProblemName');
-    const storedProblemStatement = localStorage.getItem('ProblemStatement');
-    const storedPhotos = localStorage.getItem('photos');
-    const storedSolutionData = localStorage.getItem('ProblemSolutionData');
-    const storedProblemType = localStorage.getItem('ProblemType');
+    localStorage.setItem('AddProblemFormData', JSON.stringify(formData));
+  }, [formData])
 
-    if (storedProblemType) setProblemType(storedProblemType);
-    if (storedProblemName) setProblemName(storedProblemName);
-    if (storedProblemStatement) setProblemStatement(storedProblemStatement);
-    if (storedPhotos) setPhotos(JSON.parse(storedPhotos));
-    if (storedSolutionData) setSolutionData(JSON.parse(storedSolutionData));
-  }, []);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
 
-  useEffect(() => {
-    localStorage.setItem('ProblemName', ProblemName);
-    localStorage.setItem('ProblemStatement', ProblemStatement);
-    localStorage.setItem('photos', JSON.stringify(photos));
-    localStorage.setItem('ProblemSolutionData', JSON.stringify(solutionData));
-    localStorage.setItem('ProblemType', problemType);
-  }, [ProblemName, ProblemStatement, photos, solutionData, problemType]);
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const { valid, errorMessage } = validateImage(file);
+    if (!valid) {
+      alert(errorMessage);
+      return;
+    }
+    try {
+      const fileName = `${file.name}_${uuidv4()}`;
+      
+      const storage = getStorage();
+      const fileRef = `images/problems/${fileName}`;
+      const storageRef = ref(storage, fileRef)
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      const obj = {
+        src: downloadURL,
+        ref: fileRef
+      }
+
+      setFormData({
+        ...formData,
+        photos: [...formData.photos, obj]
+      })
+    } catch (err) {
+      console.error("error uploading file: ", err);
+    }
+  }
+
+  const handlePhotoRemove = async (fileRef) => {
+    try {
+      const storage = getStorage();
+      const imageRef = ref(storage, fileRef);
+  
+      await deleteObject(imageRef);
+    } catch (err) {
+      console.error("Error deleting file: ", err);
+    }
+  }
 
   const submit = async () => {
     if (ProblemName === ''
@@ -266,17 +114,8 @@ function AddProblem() {
     } finally {
       try {
         const obj = {
+          ...formData,
           number: num + 1,
-          author: userName,
-          name: ProblemName,
-          subject: subject,
-          grade: grade,
-          difficulty: difficulty,
-          problemPhotos: photos,
-          problemStatement: ProblemStatement,
-          problemType: problemType,
-          solutionData: solutionData,
-          problemAccess: problemAccess,
           date: serverTimestamp()
         }
         const ref = doc(db, 'problems', `${num + 1}`);
@@ -287,95 +126,50 @@ function AddProblem() {
       } catch (err) {
         console.log(err);
       } finally {
-        localStorage.setItem('ProblemName', '');
-        localStorage.setItem('ProblemStatement', '');
-        localStorage.setItem('ProblemType', '');
-        localStorage.setItem('ProblemSolutionData', JSON.stringify({}));
-        localStorage.setItem('ProblemVariants', JSON.stringify([]));
-        localStorage.setItem('ProblemSolutions', JSON.stringify([]));
-        localStorage.setItem('ProblemMatchingPairs', JSON.stringify([]));
-        localStorage.setItem('photos', JSON.stringify([]));
-        localStorage.setItem('ProblemOrder', JSON.stringify([]));
-
-        setProblemName('');
-        setProblemStatement('');
-        setPhotos([]);
-        setSolutionData({});
-        setProblemType('');
+        localStorage.removeItem('AddProblemFormData')
       }
     }
   }
 
-  const updateSolutionData = (newData) => {
-    setSolutionData(newData);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.name === '' || formData.statement === '' || !formData.workplaceData || formData.workplaceData.coefficient === 0) {
+      alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
+      return;
+    }
+    
+    let num = 1;
+    try {
+      num = (await getDoc(doc(db, 'problems', 'countDoc'))).data().count;
+    } finally {
+      try {
+        const obj = {
+          ...formData,
+          point: parseInt(formData.point),
+          grade: parseInt(formData.grade),
+          difficulty: parseInt(formData.difficulty),
+          problemId: num + 1,
+          date: serverTimestamp()
+        }
+        const ref = doc(db, 'problems', `${num + 1}`);
+        await setDoc(ref, obj); 
+
+        const cntRef = doc(db, 'problems', 'countDoc');
+        await updateDoc(cntRef, {count: num + 1});
+      } catch (err) {
+        console.log(err);
+      } finally {
+        localStorage.removeItem('AddProblemFormData');
+        alert('ამოცანა დამატებულია');
+        window.location.reload();
+      }
+    }
   }
 
   return (
-    <div className='addPostContainer'>
-      <input 
-        type='text'
-        value={ProblemName}
-        onChange={(e) => setProblemName(e.target.value)}
-        maxLength={50}
-        placeholder='ამოცანის სახელი'
-        required
-      />
-      <textarea 
-        type='text'
-        value={ProblemStatement}
-        onChange={(e) => setProblemStatement(e.target.value)}
-        maxLength={2000}
-        placeholder='ამოცანის პირობა'
-        required
-      />
-      <div className='addPostRow'>
-        <input 
-          type='text'
-          value={ProblemPhoto}
-          onChange={(e) => setProblemPhoto(e.target.value)}
-          placeholder='ფოტოს მისამართი'
-        />
-        <button onClick={() => {
-          setPhotos([ProblemPhoto, ...photos]);
-          setProblemPhoto('');
-        }}>დამატება</button>
-      </div>
-      <div className="postPhotoHolder">
-          {
-            photos.map((data, ind) => {
-              return (
-                <img className='postScrollImg' alt='photo' src={data} key={ind} onClick={() => {
-                  setPhotos(photos => photos.filter(img => img !== data));
-                }}/>
-              )
-            })
-          }
-      </div>
-
+    <form onSubmit={handleSubmit} className='addPostContainer'>
       <div>
-        ამოცანის ტიპი: 
-        <select onChange = {(e) => setProblemType(e.target.value)} value={problemType}>
-          {
-            problemTypes.map((val, ind) => {
-              return (
-                <option value={val} key={ind}>{val}</option>
-              )
-            })
-          }
-        </select>
-      </div>
-
-      <div>
-          {problemType === 'ვარიანტების არჩევა' && <ChooseVariants updateSolutionData={updateSolutionData}/>}
-          {problemType === 'შესაბამისობა' && <Matching updateSolutionData={updateSolutionData}/>}
-          {problemType === 'დალაგება' && <Order updateSolutionData={updateSolutionData}/>}
-          {problemType === 'რიცხვის ჩაწერა' && <h2>ეს ფუნქცია მალე დამატება</h2>}
-          {problemType === 'ფოტოს ამოცნობა' && <h2>ეს ფუნქცია მალე დამატება</h2>}
-          {problemType === 'გამოტოვებული სიტყვები' && <h2>ეს ფუნქცია მალე დამატება</h2>}
-      </div>
-
-      <div>
-        <select onChange={(e) => setSubject(e.target.value)} value={subject}>
+        <select name='subject' onChange={handleChange} value={formData.subject}>
           {
             subjects.map((subject, ind) => {
               return (
@@ -384,7 +178,7 @@ function AddProblem() {
             })
           }
         </select>
-        <select onChange={(e) => setGrade(e.target.value)} value={grade}>
+        <select name='grade' onChange={handleChange} value={formData.grade}>
           {
             [7, 8, 9, 10, 11, 12].map((grade, ind) => {
               return (
@@ -393,7 +187,7 @@ function AddProblem() {
             })
           }
         </select>
-        <select onChange={(e) => setDifficulty(e.target.value)} value={difficulty}>
+        <select name='difficulty' onChange={handleChange} value={formData.difficulty}>
           {
             [1, 2, 3].map((diff, ind) => {
               return (
@@ -404,7 +198,7 @@ function AddProblem() {
             })
           }
         </select>
-        <select onChange={(e) => setProblemAccess(e.target.value)} value={problemAccess}>
+        <select name='access' onChange={handleChange} value={formData.access}>
           {
             ['საჯარო', 'სატესტო'].map((diff, ind) => {
               return (
@@ -416,10 +210,94 @@ function AddProblem() {
           }
         </select>
       </div>
-      <div className='problemSubmit addPostSubmit'>
-          <button onClick={() => {submit()}}>დადასტურება</button>
+      <input 
+        type='text'
+        name='name'
+        value={formData.name}
+        onChange={handleChange}
+        maxLength={30}
+        placeholder='ამოცანის სახელი'
+        required
+      />
+      <textarea 
+        type='text'
+        name='statement'
+        value={formData.statement}
+        onChange={handleChange}
+        maxLength={2000}
+        placeholder='ამოცანის პირობა'
+        required
+      />
+      <div className='addPostRow'>
+        <label className='custom-file-upload'>
+          <input 
+            type='file'
+            accept='image/*'
+            onChange={handleImageChange}
+          />
+          ფოტოს ატვირთვა
+        </label>
       </div>
-    </div>
+      <div className="postPhotoHolder">
+          {
+            formData.photos.map((data, ind) => {
+              return (
+                <img className='postScrollImg' alt='photo' src={data.src} key={ind} onClick={() => {
+                  const newPhotos = formData.photos.filter(img => img !== data);
+                  setFormData({
+                    ...formData,
+                    photos: newPhotos
+                  })
+                  handlePhotoRemove(data.ref);
+                }}/>
+              )
+            })
+          }
+      </div>
+
+      <div>
+        ამოცანის ტიპი: 
+        <select name='type' onChange={(e) => {
+          const { workplaceData, ...restForm } = formData;
+          setFormData(restForm);
+          localStorage.setItem('AddProblemFormData', JSON.stringify(restForm));
+          handleChange(e);
+        }} value={formData.type}>
+          {
+            problemTypes.map((val, ind) => {
+              return (
+                <option value={val} key={ind}>{val}</option>
+              )
+            })
+          }
+        </select>
+      </div>  
+      
+      <CreateProblem setFormData={setFormData} type={formData.type}/>
+      
+      { (formData && formData.workplaceData && formData.workplaceData.coefficient) ?
+        <>
+          <div>
+            ქულა თითო სწორი პასუხისთვის: 
+            <select name='point' onChange={handleChange} value={formData.point}>
+              {
+                [1, 2, 3].map((val, ind) => {
+                  return (
+                    <option value={val} key={ind}>{val}</option>
+                  )
+                })
+              }
+            </select>
+          </div>
+          <div>
+              მაქსიმალური ჯამური ქულა = {formData.workplaceData.coefficient} * {formData.point} = {formData.workplaceData.coefficient * formData.point}
+          </div>
+        </> : <></>
+      }
+      <div className='problemSubmit addPostSubmit'>
+          <button type='submit'>დადასტურება</button>
+      </div>
+    </form>
   )
 }
 

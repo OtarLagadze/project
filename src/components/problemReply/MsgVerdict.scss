@@ -1,0 +1,22 @@
+@import '@src/globals.scss';
+
+.msg {
+  @include custom-card;
+  border: none;
+  outline: none;
+  background-color: white;
+  padding: 5px;
+  padding-inline: 10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  margin-right: 15px;
+  margin-bottom: 15px;
+
+  p {
+    font-size: 1.1rem;
+    color: map-get($font-color, 'primary');
+  }
+}

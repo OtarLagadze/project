@@ -11,9 +11,11 @@ const Topic = ({data}) => {
     return (
         <div className='cpageTopic'>
             <h1>{data.name}</h1>
-            {
-                data.comment
-            }
+            <div>
+                {
+                    data.comment
+                }
+            </div>
             {
                 data.links.map((link, ind) => {
                     return (
@@ -50,7 +52,7 @@ function ClassPage() {
                 name: doc.id,
                 links: doc.data().links,
                 problems: doc.data().problems,
-                comment: doc.data().comment
+                comment: doc.data().comments
             })));
         } catch (err) {
             console.log(err);

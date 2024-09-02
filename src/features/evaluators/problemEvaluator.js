@@ -1,19 +1,19 @@
-function evaluateMultipleChoice(data) {
+function evaluateMultipleChoice({ submission, answer, point }) {
   let pointsEarned = 0;
   let verdict = [];
 
-  data.submission.forEach(child => {
-    let answerIndex = data.answer.indexOf(child);
+  submission.forEach(child => {
+    let answerIndex = answer.indexOf(child);
 
     if (answerIndex !== -1) {
-      pointsEarned += data.point;
+      pointsEarned += point;
       verdict.push({
         value: child,
         verdict: true,
       })
-      data.answer.splice(answerIndex, 1);
+      answer.splice(answerIndex, 1);
     } else {
-      pointsEarned -= data.point / 2;
+      pointsEarned -= point / 2;
       verdict.push({
         value: child,
         verdict: false,
@@ -21,7 +21,7 @@ function evaluateMultipleChoice(data) {
     }
   })
 
-  pointsEarned = Math.round(pointsEarned);
+  pointsEarned = Math.round(Math.max(0, pointsEarned));
 
   return {
     pointsEarned: pointsEarned,
@@ -39,12 +39,12 @@ function evaluateMatching(data) {
     if (answerchild && submissionChild.second === answerchild.second) {
       pointsEarned += data.point;
       verdict.push({
-        index: ind,
+        value: submissionChild,
         verdict: true,
       })
     } else {
       verdict.push({
-        index: ind,
+        value: submissionChild,
         verdict: false,
       })
     }
@@ -66,12 +66,12 @@ function evaluateSorting(data) {
     if (data.submission[i] === data.answer[i]) {
       pointsEarned += data.point;
       verdict.push({
-        index: i,
+        value: data.submission[i],
         verdict: true,
       })
     } else {
       verdict.push({
-        index: i,
+        value: data.submission[i],
         verdict: false,
       })
     }
@@ -87,11 +87,19 @@ function evaluateSorting(data) {
 
 function evaluateNumber(data) {
   let pointsEarned = 0;
-  let verdict = false;
+  let verdict = [];
 
   if (data.submission === data.answer) {
     pointsEarned = data.point;
-    verdict = true;
+    verdict.push({
+      value: data.submission,
+      verdict: true,
+    })
+  } else {
+    verdict.push({
+      value: data.submission,
+      verdict: false,
+    })
   }
 
   return {
@@ -101,7 +109,7 @@ function evaluateNumber(data) {
 }
 
 export function evaluateProblem(data) {
-  switch (data.problemType) {
+  switch (data.type) {
     case 'ვარიანტების არჩევა':
       return evaluateMultipleChoice(data);
     case 'შესაბამისობა':

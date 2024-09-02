@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, Outlet, useParams } from 'react-router'
-import { selectUserClassGroups, selectUserClassId, selectUserRole } from '../features/userSlice'
+import { selectUserClassGroups, selectUserClassId, selectUserRole } from '@features/userSlice'
 
 function PrivateRoute({ role, url }) {
   const params = useParams();

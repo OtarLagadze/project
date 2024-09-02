@@ -99,7 +99,8 @@ function Contests() {
     <div className='consWrapper'>
       {userRole === 'teacher' && 
         <div className='postsAddPost'>
-          <Link to='/addTest'>ტესტის დამატება</Link>
+          <Link to='/addTest'>ტესტის ჩანიშვნა</Link>
+          <Link to='/createTest'>ტესტის შექმნა</Link>
         </div>
       }
       <div className='testsList'>
