@@ -9,7 +9,7 @@ function ProfileLink() {
   const userName = useSelector(selectUserName);
   const userImg = useSelector(selectUserPhotoUrl);
   return (
-    <Link to={"/profile"} className='navElement' id='myCard'>
+    <Link to={"/"} className='navElement' id='myCard'>
         <div className="userPhotoHolder">
             <div className="userPhoto">
                 <img src={userImg ? userImg : '/svg/sidebar/user.svg'}/>

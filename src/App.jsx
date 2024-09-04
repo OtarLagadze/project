@@ -30,46 +30,6 @@ import CreateTest from "@pages/forms/CreateTest"
 
 function App() {
   const [active, setActive] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const userId = useSelector(selectUserId);
-  const userRole = useSelector(selectUserRole);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const user = auth.currentUser;
-        setLoading(user ? true : false);
-        if (!user) return;
-
-        const docRef = doc(db, 'users', user.uid);
-        const res = (await getDoc(docRef)).data()
-
-        dispatch(
-          setActiveUser({
-            userName: user.displayName,
-            userPhotoUrl: user.photoURL,
-            userId: user.uid,
-            userClassId: '10გ',
-            userRole: res.role,
-            userClassGroups: res.role === 'teacher' ? res.classGroups : []
-          })
-        );
-      } catch (error) {
-        alert(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (userId) {
-      setLoading(false);
-      return;
-    }
-    const unsubscribe = auth.onAuthStateChanged(fetchData);
-
-    return unsubscribe;
-  }, [dispatch]);
 
   return (
     <div className="main">
@@ -84,45 +44,7 @@ function App() {
       </div>
 
       <div className="mainRender">
-        {!loading && 
-        <Routes>
-            <Route path="/" element={<Home />} />
-
-            <Route element={<PrivateRoute role={'teacher'} url='/405' />}>
-              <Route path="/addPost" element={<AddPost />} />
-              <Route path="/addProblem" element={<AddProblem />} />
-              <Route path="/addTest" element={<AddTest />} />
-              <Route path="/createTest" element={<CreateTest />} />
-
-              <Route element={<PrivateRoute role={'containClass'} url='/405' />}>
-                <Route path="/addTopic/:classId/:subject" element={<AddTopic />} />
-              </Route>
-            </Route>
-
-            <Route element={<PrivateRoute role={'nonGuest'} url='/401'/>}>
-              <Route path="/class" element={<Class />} />
-              <Route path="/tests" element={<Contests />} />
-            </Route>
-
-            <Route element={<PrivateRoute role={'containClass'} url='/405'/>}>
-              <Route path="/tests/:classId/:testId" element={<TestPage />} />
-              <Route path="/class/:classId/:subject" element={<ClassPage />} />
-            </Route>
-
-            <Route path="/posts/page/:pageId" element={<Posts />} />
-            <Route path="/posts/:postId" element={<PostsPost />} />
-
-            <Route path="/problemset/:pageId" element={<Problemset />} />
-            <Route path="/problemset/problem/:problemId" element={<ProblemsetProblem />} />
-
-            <Route path="/sports" element={<Sports />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/profile" element={<Profile />} />
-
-            <Route path="/401" element={<NotFound msg={'გთხოვთ გაიაროთ ავტორიზაცია'}/>} />
-            <Route path="/405" element={<NotFound msg={'თქვენ არ გაქვთ ამ გვერდზე წვდომის უფლება'}/>} />
-            <Route path="*" element={<NotFound msg={'ეს გვერდი არ არსებობს'}/>} />
-        </Routes> }
+        <AddProblem />
       </div>
     </div>
   )

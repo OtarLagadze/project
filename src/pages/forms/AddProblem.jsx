@@ -11,12 +11,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
 function AddProblem() {
-  const userName = useSelector(selectUserName);
+  const userName = 'Neo School';
 
   const subjects = ['მათემატიაკა', 'ქართული', 'ინგლისური', 'ისტორია',
   'გეოგრაფია', 'ფიზიკა', 'ქიმია', 'ბიოლოგია', 'ხელოვნება',
   'მუსიკა', 'მოქალაქეობა', 'რუსული'];
-  const problemTypes = ['ვარიანტების არჩევა', 'შესაბამისობა', 'დალაგება', 'რიცხვის ჩაწერა', 'ფოტოს ამოცნობა', 'გამოტოვებული სიტყვები'];
+  const problemTypes = ['ვარიანტების არჩევა', 'შესაბამისობა', 'დალაგება', 'რიცხვის ჩაწერა', 'გამოტოვებული სიტყვები'];
   const [problemPhoto, setProblemPhoto] = useState('');
   const template = {
     // id: 0,
@@ -98,36 +98,6 @@ function AddProblem() {
       await deleteObject(imageRef);
     } catch (err) {
       console.error("Error deleting file: ", err);
-    }
-  }
-
-  const submit = async () => {
-    if (ProblemName === ''
-    || ProblemStatement === '' 
-    || solutionData == {}) {
-      alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
-      return;
-    }
-    let num = 1;
-    try {
-      num = (await getDoc(doc(db, 'problems', 'countDoc'))).data().count;
-    } finally {
-      try {
-        const obj = {
-          ...formData,
-          number: num + 1,
-          date: serverTimestamp()
-        }
-        const ref = doc(db, 'problems', `${num + 1}`);
-        await setDoc(ref, obj); 
-
-        const cntRef = doc(db, 'problems', 'countDoc');
-        await updateDoc(cntRef, {count: num + 1});
-      } catch (err) {
-        console.log(err);
-      } finally {
-        localStorage.removeItem('AddProblemFormData')
-      }
     }
   }
 

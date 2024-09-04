@@ -6,12 +6,12 @@ import './Navbar.scss'
 function Navbar() {
   const data = [
     // {dir: "/", name: "მთავარი", icon: "home"},
-    {dir: "/posts/page/1", name: "პოსტები", icon: "earth"},
-    {dir: "/tests", name: "ტესტები", icon: "medal"},
-    {dir: "/class", name: "კლასი", icon: "team"},
-    {dir: "/problemset/1", name: "ამოცანები", icon: "gym"},
-    {dir: "/sports", name: "სპორტი", icon: "sports"},
-    {dir: "/chat", name: "ჩატი", icon: "chat"},
+    {dir: "/", name: "პოსტები", icon: "earth"},
+    {dir: "/", name: "ტესტები", icon: "medal"},
+    {dir: "/", name: "კლასი", icon: "team"},
+    {dir: "/", name: "ამოცანები", icon: "gym"},
+    {dir: "/", name: "სპორტი", icon: "sports"},
+    {dir: "/", name: "ჩატი", icon: "chat"},
     // {dir: "/profile", name: "პროფილი", icon: "medal"},
   ]
 
