@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import './AddPost.scss'
 import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
 import { db } from '@src/firebaseInit';
 import { useSelector } from 'react-redux';
 import { selectUserName, selectUserPhotoUrl } from '@features/userSlice';
+import { validateImage } from '@features/validators/imageValidator';
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
 function AddPost() {
   const userName = useSelector(selectUserName);
@@ -29,11 +32,6 @@ function AddPost() {
     localStorage.setItem('postText', postText);
     localStorage.setItem('photos', JSON.stringify(photos));
   }, [postName, postText, photos]);
-
-  const addPhoto = () => {
-    setPhotos([postPhoto, ...photos]);
-    setPostPhoto('');
-  }
 
   const submit = async () => {
     if (postName === ''
@@ -74,6 +72,42 @@ function AddPost() {
   }
   }
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const { valid, errorMessage } = validateImage(file);
+    if (!valid) {
+      alert(errorMessage);
+      return;
+    }
+    try {
+      const fileName = `${file.name}_${uuidv4()}`;
+      const storage = getStorage();
+      const fileRef = `images/posts/${fileName}`;
+      const storageRef = ref(storage, fileRef)
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      const obj = {
+        src: downloadURL,
+        ref: fileRef
+      }
+      setPhotos([...photos, obj]);
+    } catch (err) {
+      console.error("error uploading file: ", err);
+    }
+  }
+
+  const handlePhotoRemove = async (fileRef) => {
+    try {
+      const storage = getStorage();
+      const imageRef = ref(storage, fileRef);
+  
+      await deleteObject(imageRef);
+    } catch (err) {
+      console.error("Error deleting file: ", err);
+    }
+  }
+
   return (
     <div className='addPostContainer'>
       <input 
@@ -93,20 +127,23 @@ function AddPost() {
         required
       />
       <div className='addPostRow'>
-        <input 
-          type='text'
-          value={postPhoto}
-          onChange={(e) => setPostPhoto(e.target.value)}
-          placeholder='ფოტოს მისამართი'
-        />
-        <button onClick={() => addPhoto()}>დამატება</button>
+        <label className='custom-file-upload'>
+          <input 
+            type='file'
+            accept='image/*'
+            onChange={handleImageChange}
+          />
+          ფოტოს ატვირთვა
+        </label>
       </div>
       <div className="postPhotoHolder">
           {
             photos.map((data, ind) => {
               return (
-                <img className='postScrollImg' alt='photo' src={data} key={ind} onClick={() => {
-                  setPhotos(photos => photos.filter(img => img !== data));
+                <img className='postScrollImg' alt='photo' src={data.src} key={ind} onClick={() => {
+                  const newPhotos = photos.filter(img => img !== data);
+                  setPhotos(newPhotos);
+                  handlePhotoRemove(data.ref);
                 }}/>
               )
             })

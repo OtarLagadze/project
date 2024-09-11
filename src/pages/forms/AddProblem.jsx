@@ -101,36 +101,6 @@ function AddProblem() {
     }
   }
 
-  const submit = async () => {
-    if (ProblemName === ''
-    || ProblemStatement === '' 
-    || solutionData == {}) {
-      alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
-      return;
-    }
-    let num = 1;
-    try {
-      num = (await getDoc(doc(db, 'problems', 'countDoc'))).data().count;
-    } finally {
-      try {
-        const obj = {
-          ...formData,
-          number: num + 1,
-          date: serverTimestamp()
-        }
-        const ref = doc(db, 'problems', `${num + 1}`);
-        await setDoc(ref, obj); 
-
-        const cntRef = doc(db, 'problems', 'countDoc');
-        await updateDoc(cntRef, {count: num + 1});
-      } catch (err) {
-        console.log(err);
-      } finally {
-        localStorage.removeItem('AddProblemFormData')
-      }
-    }
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.name === '' || formData.statement === '' || !formData.workplaceData || formData.workplaceData.coefficient === 0) {

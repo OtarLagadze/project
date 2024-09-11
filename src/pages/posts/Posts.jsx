@@ -33,10 +33,10 @@ function Posts() {
   useEffect(() => {
     const fetch = async() => {
       try {
-        const low = (pageId - 1) * pageCount;
-        const high = pageId * pageCount;
         const ref = collection(db, `posts`);
-        const res = await getDocs(query(ref, where('number', '>=', low), where('number', '<=', high)));
+        const high = (await getDoc(doc(db, 'posts', 'countDoc'))).data().count - (pageId - 1) * pageCount;
+        const low = high - pageCount + 1;
+        const res = await getDocs(query(ref, orderBy('number', 'desc'), where('number', '>=', low), where('number', '<=', high)));
 
         const obj = res.docs.map((doc) => {
           const val = doc.data();
@@ -45,7 +45,7 @@ function Posts() {
           return {
             postId: doc.id,
             postName: val.name,
-            postImage: (img[0] ? img[0] : "")
+            postImage: (img[0] ? img[0].src : "")
           }
         })
 

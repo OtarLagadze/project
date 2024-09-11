@@ -20,13 +20,13 @@ import PrivateRoute from "@components/PrivateRoute"
 import NotFound from "@components/NotFound"
 import AddTopic from "@pages/forms/AddTopic"
 import AddTest from "@pages/forms/AddTest"
-import TestPage from "@pages/tests/TestPage"
 
 import { db, auth } from "@src/firebaseInit"
 import { useDispatch, useSelector } from "react-redux"
 import { selectUserId, selectUserRole, setActiveUser } from "@features/userSlice"
 import { doc, getDoc } from "firebase/firestore"
 import CreateTest from "@pages/forms/CreateTest"
+import TestDistributor from "@pages/tests/TestDistributor"
 
 function App() {
   const [active, setActive] = useState(true);
@@ -101,11 +101,11 @@ function App() {
 
             <Route element={<PrivateRoute role={'nonGuest'} url='/401'/>}>
               <Route path="/class" element={<Class />} />
-              <Route path="/tests" element={<Contests />} />
+              <Route path="/tests/:pageId" element={<Contests />} />
             </Route>
 
             <Route element={<PrivateRoute role={'containClass'} url='/405'/>}>
-              <Route path="/tests/:classId/:testId" element={<TestPage />} />
+              <Route path="/tests/:classId/:subject/:recordId/:testId" element={<TestDistributor />} />
               <Route path="/class/:classId/:subject" element={<ClassPage />} />
             </Route>
 
@@ -114,6 +114,8 @@ function App() {
 
             <Route path="/problemset/:pageId" element={<Problemset />} />
             <Route path="/problemset/problem/:problemId" element={<ProblemsetProblem />} />
+
+            <Route path="/tests/tests/:testId" element={<TestDistributor />} />
 
             <Route path="/sports" element={<Sports />} />
             <Route path="/chat" element={<Chat />} />

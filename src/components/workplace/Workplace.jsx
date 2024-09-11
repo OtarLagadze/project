@@ -1,5 +1,5 @@
 import { selectUserId } from '@features/userSlice';
-import React, { Component, useState } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import WpMultipleChoice from './WpMultipleChoice';
 import { evaluateProblem } from '@features/evaluators/problemEvaluator';
@@ -25,13 +25,15 @@ const ComponentToRender = ({ type, setSubmission, data }) => {
   }
 }
 
-function Workplace({ data, setReplyData }) {
+function Workplace({ data, setReplyData, fromTest }) {
   const userId = useSelector(selectUserId);
   const [submission, setSubmission] = useState(null);
 
   const evaluate = () => {
     if (!submission && submission !== 0) {
-      alert("გთხოვთ შეასრულოთ დავალება");
+      if (!fromTest) {
+        alert("გთხოვთ შეასრულოთ დავალება");
+      }
       return;
     }
     const obj = {
@@ -49,22 +51,34 @@ function Workplace({ data, setReplyData }) {
       maxPoint: data.WpData.maxPoint,
       evaluator: evaluateProblem(obj),
     }
+    if (fromTest && res.evaluator.verdict.length === 0) {
+      setReplyData(null);
+      return;
+    }
     setReplyData(res);
     //answer not in variants
   }
 
+  useEffect(() => {
+    if (!fromTest) return;
+    evaluate();
+  }, [submission]);
+
   return (
     <div>
       <ComponentToRender type={data.type} data={data.WpData} setSubmission={setSubmission}/>
-      <div className='problemSubmit'>
-        {
-          userId ? (
-            <button onClick={evaluate}>დადასტურება</button>
-          ) : (
-            <div>ასატვირთად გაიარეთ ავტორიზაცია</div>
-          )
-        }
-      </div>
+      {
+        !fromTest ?
+          <div className='problemSubmit'>
+            {
+              userId ? (
+                <button onClick={evaluate}>დადასტურება</button>
+              ) : (
+                <div>ასატვირთად გაიარეთ ავტორიზაცია</div>
+              )
+            }
+          </div> : <></>
+      }
     </div>
   )
 }

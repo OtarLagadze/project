@@ -1,4 +1,4 @@
-import { Timestamp, addDoc, collection } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUserClassGroups, selectUserName } from '@features/userSlice';
@@ -12,8 +12,14 @@ function AddTest() {
   const [chosenClass, setChosenClass] = useState(userClassGroups[0]);
   const [date, setDate] = useState(new Date());
   const [duration, setDuration] = useState('');
+  const [testId, setTestId] = useState('');
+  const [testData, setTestData] = useState(null);
 
   const submit = async () => {
+    if (duration === '' || !testData) {
+      alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
+      return;
+    }
     if (isNaN(date.getTime())) {
       console.error("Invalid date");
     } else {
@@ -23,9 +29,10 @@ function AddTest() {
       const endTimestamp = Timestamp.fromDate(endDate);
 
       try {
-        await addDoc(collection(db, 'tests'), {
+        await addDoc(collection(db, 'testRecords'), {
           classId: chosenClass.classId,
           subject: chosenClass.subject,
+          testData: testData,
           startDate: timestamp,
           endDate: endTimestamp,
           duration: durationMinutes,
@@ -38,6 +45,29 @@ function AddTest() {
       }
     }
   };
+
+  const handleTestAdd = async () => {
+    if (!testId) return;
+
+    const ref = doc(db, 'tests', testId.toString());
+    const test = await getDoc(ref);
+  
+    if (!test.exists()) {
+      alert('გთხოვთ მიუთითოთ სწორი ტესტის ნომერი');
+      return;
+    }
+  
+    const testData = test.data();
+    const { name, maxPoint } = testData; 
+
+    setTestData({
+      testId: testId,
+      name: name,
+      maxPoint: maxPoint
+    })
+    
+    setTestId('');
+  }
 
   return (
     <div className='addPostContainer'>
@@ -62,6 +92,25 @@ function AddTest() {
         placeholder='ხანგრძლივობა წუთებში'
         required
       />
+      <div className='addPostRow'>
+        <input 
+          type='number'
+          value={testId}
+          onChange={(e) => setTestId(parseInt(e.target.value))}
+          placeholder='ტესტის ნომერი'
+        />
+        <button type='button' onClick={handleTestAdd}>დამატება</button>
+      </div>
+      { (testData && testData.maxPoint > 0) ? 
+        <div>
+          <div>
+            ტესტი: {testData.name}
+          </div>
+          <div>
+            მაქსიმალური ქულა: {testData.maxPoint}
+          </div>
+        </div> : <></>
+      }
       <div className='problemSubmit addPostSubmit'>
         <button onClick={submit}>დადასტურება</button>
       </div>

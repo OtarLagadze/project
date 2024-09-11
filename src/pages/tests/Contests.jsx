@@ -5,6 +5,7 @@ import { selectUserRole, selectUserName, selectUserClassId } from '@features/use
 import { Link } from 'react-router-dom';
 import { db } from '@src/firebaseInit';
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import TestsList from './TestsList';
 
 const formatDate = (date) => {
   const options = { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
@@ -13,7 +14,7 @@ const formatDate = (date) => {
 
 const TestCard = ({ test }) => {
   return (
-    <Link to={`/tests/${test.classId}/${test.id}`} key={test.id} className='testItem'>
+    <Link to={`/tests/${test.classId}/${test.subject}/${test.id}/${test.testData.testId}`} key={test.id} className='testItem'>
       <div className='testItemRow'>  
         <p>{test.subject}</p>
         <p>{test.classId}</p>
@@ -55,9 +56,9 @@ function Contests() {
     const fetchTests = async () => {
       let q;
       if (userRole === 'teacher') {
-        q = query(collection(db, 'tests'), where('teacher', '==', userName));
+        q = query(collection(db, 'testRecords'), where('teacher', '==', userName));
       } else if (userRole === 'student') {
-        q = query(collection(db, 'tests'), where('classId', '==', userClassId));
+        q = query(collection(db, 'testRecords'), where('classId', '==', userClassId));
       }
       if (q) {
         try {
@@ -96,19 +97,22 @@ function Contests() {
   }, [userRole, userName, userClassId]);
 
   return (
-    <div className='consWrapper'>
-      {userRole === 'teacher' && 
-        <div className='postsAddPost'>
-          <Link to='/addTest'>ტესტის ჩანიშვნა</Link>
-          <Link to='/createTest'>ტესტის შექმნა</Link>
+    <>
+      <div className='consWrapper'>
+        {userRole === 'teacher' && 
+          <div className='postsAddPost'>
+            <Link to='/addTest'>ტესტის ჩანიშვნა</Link>
+            <Link to='/createTest'>ტესტის შექმნა</Link>
+          </div>
+        }
+        <div className='testsList'>
+          <TestsRow testType={'მიმდინარე'} arr={tests.active}/>
+          <TestsRow testType={'დაგეგმილი'} arr={tests.upcoming}/>
+          <TestsRow testType={'დასრულებული'} arr={tests.finished}/>
         </div>
-      }
-      <div className='testsList'>
-        <TestsRow testType={'მიმდინარე'} arr={tests.active}/>
-        <TestsRow testType={'დაგეგმილი'} arr={tests.upcoming}/>
-        <TestsRow testType={'დასრულებული'} arr={tests.finished}/>
       </div>
-    </div>
+      <TestsList />
+    </>
   );
 }
 

@@ -106,7 +106,7 @@ function PostsPost() {
                     {
                         data.postPhotos.map((data, ind) => {
                             return (
-                                <img className='postScrollImg' alt='photo' src={data} key={ind} />
+                                <img className='postScrollImg' alt='photo' src={data.src} key={ind} />
                             )
                         })
                     }
