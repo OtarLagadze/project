@@ -39,7 +39,7 @@ function TestProblem({ problemId, numero, setMessages }) {
   }, [problemId])
 
   return (
-    <> { !loading &&
+    <> { (!loading && data) &&
       <>
         <div className='problemContainer'>
           <div className="problemHeader">

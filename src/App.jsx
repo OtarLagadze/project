@@ -27,6 +27,7 @@ import { selectUserId, selectUserRole, setActiveUser } from "@features/userSlice
 import { doc, getDoc } from "firebase/firestore"
 import CreateTest from "@pages/forms/CreateTest"
 import TestDistributor from "@pages/tests/TestDistributor"
+import TestRunning from "@pages/tests/TestRunning"
 
 function App() {
   const [active, setActive] = useState(true);
@@ -116,6 +117,7 @@ function App() {
             <Route path="/problemset/problem/:problemId" element={<ProblemsetProblem />} />
 
             <Route path="/tests/tests/:testId" element={<TestDistributor />} />
+            <Route path="/tests/test/:testId" element={<TestRunning />} />
 
             <Route path="/sports" element={<Sports />} />
             <Route path="/chat" element={<Chat />} />

@@ -9,6 +9,7 @@ import CreateProblem from '@components/problemCreator/CreateProblem';
 import { validateImage } from '@features/validators/imageValidator';
 import { v4 as uuidv4 } from 'uuid';
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { MathJax } from 'better-react-mathjax';
 
 function AddProblem() {
   const userName = useSelector(selectUserName);
@@ -16,7 +17,7 @@ function AddProblem() {
   const subjects = ['მათემატიაკა', 'ქართული', 'ინგლისური', 'ისტორია',
   'გეოგრაფია', 'ფიზიკა', 'ქიმია', 'ბიოლოგია', 'ხელოვნება',
   'მუსიკა', 'მოქალაქეობა', 'რუსული'];
-  const problemTypes = ['ვარიანტების არჩევა', 'შესაბამისობა', 'დალაგება', 'რიცხვის ჩაწერა', 'ფოტოს ამოცნობა', 'გამოტოვებული სიტყვები'];
+  const problemTypes = ['ვარიანტების არჩევა', 'შესაბამისობა', 'დალაგება', 'რიცხვის ჩაწერა', 'ფოტოს ამოცნობა', 'გამოტოვებული სიტყვები', 'ტექსტური'];
   const [problemPhoto, setProblemPhoto] = useState('');
   const template = {
     // id: 0,
@@ -51,6 +52,7 @@ function AddProblem() {
   
   useEffect(() => {
     localStorage.setItem('AddProblemFormData', JSON.stringify(formData));
+    console.log(formData);
   }, [formData])
 
   const handleChange = (e) => {
@@ -103,7 +105,7 @@ function AddProblem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.name === '' || formData.statement === '' || !formData.workplaceData || formData.workplaceData.coefficient === 0) {
+    if (formData.name === '' || formData.statement === '' || (formData.type !== 'ტექსტური' && (!formData.workplaceData || formData.workplaceData.coefficient === 0))) {
       alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
       return;
     }

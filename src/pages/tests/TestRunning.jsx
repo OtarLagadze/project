@@ -43,7 +43,9 @@ function TestRunning({ timeLeft }) {
           <small>მაქსიმალური ქულა - {data.maxPoint}</small>
         </div>
       </div>
-      uhm running {testId}, time left {timeLeft}
+      {
+        timeLeft ? <h1>uhm running {testId}, time left {timeLeft}</h1> : <></>
+      }   
       { data.problems ?
         data.problems.map(({ problemId}, ind) => {
           return <TestProblem problemId={problemId.toString()} numero={ind + 1} setMessages={setMessages} key={ind}/>

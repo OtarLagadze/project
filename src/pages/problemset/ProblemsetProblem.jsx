@@ -37,9 +37,13 @@ function ProblemsetProblem() {
           <div className="problemHeader">
             <h1>{data.name}</h1>
           </div>
-          <div>
-            მაქსიმალური ქულა: {data.point * data.workplaceData.coefficient}
-          </div>
+          {
+            (data.point !== 0 ? 
+              <div>
+                მაქსიმალური ქულა: {data.point * data.workplaceData.coefficient}
+              </div> : <></>
+            )
+          }
           <div className="problemStatement">
             <p>{data.statement}</p>
             <div className='postPhotoHolder'>

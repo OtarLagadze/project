@@ -20,6 +20,8 @@ const ComponentToRender = ({ type, setSubmission, data }) => {
       return <WpWriteNumber setSubmission={setSubmission} data={data}/>;
     case 'გამოტოვებული სიტყვები': 
       return <WpMissingWords setSubmission={setSubmission} data={data}/>;
+    case 'ტექსტური': 
+      return;
     default:
       return <div>დაფიქსირდა შეცდომა</div>
   }
@@ -68,7 +70,7 @@ function Workplace({ data, setReplyData, fromTest }) {
     <div>
       <ComponentToRender type={data.type} data={data.WpData} setSubmission={setSubmission}/>
       {
-        !fromTest ?
+        (!fromTest && data.type !== 'ტექსტური') ?
           <div className='problemSubmit'>
             {
               userId ? (

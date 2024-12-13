@@ -4,6 +4,7 @@ import Matching from '@components/problemCreator/Matching';
 import Sorting from '@components/problemCreator/Sorting';
 import WriteNumber from '@components/problemCreator/WriteNumber';
 import MissingWords from '@components/problemCreator/MissingWords';
+import TextType from '@components/problemCreator/TextType';
 
 function CreateProblem({ setFormData, type }) {
   switch (type) {
@@ -17,6 +18,8 @@ function CreateProblem({ setFormData, type }) {
       return <WriteNumber setFormData={setFormData}/>;
     case 'გამოტოვებული სიტყვები': 
       return <MissingWords setFormData={setFormData}/>;
+    case 'ტექსტური':
+      return <TextType setFormData={setFormData}/>;
     default:
       return <div>დაფიქსირდა შეცდომა</div>
   }
