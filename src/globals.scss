@@ -50,6 +50,11 @@ $color-mp: (
     cursor: pointer;
 }
 
+.mathElement, 
+.mathElement * {
+    font-size: 30px;
+}
+
 *{
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;

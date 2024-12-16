@@ -1,3 +1,4 @@
+import { MathJax } from 'better-react-mathjax';
 import React, { useEffect, useState } from 'react'
 
 function Matching({ setFormData }) {
@@ -76,7 +77,10 @@ function Matching({ setFormData }) {
                 coefficient: newAnswer.length
               })
             }}
-            >{curr.first} - {curr.second}</div>
+            >
+              <span>{curr.first}</span>
+              <span><MathJax className='mathElement'>{`${curr.second}`}</MathJax></span>
+            </div>
           )
         })
       }

@@ -4,11 +4,15 @@ import App from './App.jsx'
 import { BrowserRouter } from "react-router-dom"
 import { Provider } from 'react-redux'
 import { store } from './app/store.js'
-import { MathJax, MathJaxContext } from 'better-react-mathjax'
+import { MathJaxContext } from 'better-react-mathjax'
+
+const config = {
+  loader: { load: ["input/asciimath"] }
+};
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-    <MathJaxContext>
+    <MathJaxContext config={config}>
       <Provider store={store}>
         <App />
       </Provider>

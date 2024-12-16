@@ -1,3 +1,4 @@
+import { MathJax } from 'better-react-mathjax';
 import React, { useState, useRef, useEffect } from 'react';
 import Xarrow from 'react-xarrows';
 
@@ -75,7 +76,7 @@ function WpMatching({ data, setSubmission }) {
               return (
                 <button className='problemVariant' key={ind} onClick={() => addPair(ind)} ref={answerRefs.current[ind]}>
                   <div className='problemAnswerPoint'></div>
-                  <p>{val}</p>
+                  <MathJax className='mathElement'>{val}</MathJax>
                 </button>
               )
             })
