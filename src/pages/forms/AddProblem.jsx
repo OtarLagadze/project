@@ -1,276 +1,159 @@
-import React, { useEffect, useState } from 'react'
-import './AddProblem.scss'
-import './AddPost.scss'
-import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@src/firebaseInit';
+import { Timestamp, addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectUserName } from '@features/userSlice';
-import CreateProblem from '@components/problemCreator/CreateProblem';
-import { validateImage } from '@features/validators/imageValidator';
-import { v4 as uuidv4 } from 'uuid';
-import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
-import { MathJax } from 'better-react-mathjax';
+import { selectUserClassGroups, selectUserName } from '@features/userSlice';
+import { db } from '@src/firebaseInit';
+import Calendar from '@components/Calendar';
+import './AddTest.scss';
 
-function AddProblem() {
+function AddTest() {
+  const userClassGroups = useSelector(selectUserClassGroups);
   const userName = useSelector(selectUserName);
 
-  const subjects = ['მათემატიაკა', 'ქართული', 'ინგლისური', 'ისტორია',
-  'გეოგრაფია', 'ფიზიკა', 'ქიმია', 'ბიოლოგია', 'ხელოვნება',
-  'მუსიკა', 'მოქალაქეობა', 'რუსული'];
-  const problemTypes = ['ვარიანტების არჩევა', 'შესაბამისობა', 'დალაგება', 'რიცხვის ჩაწერა', 'ფოტოს ამოცნობა', 'გამოტოვებული სიტყვები', 'ტექსტური'];
-  const [problemPhoto, setProblemPhoto] = useState('');
   const template = {
-    // id: 0,
-    author: userName,
-    // date: '',
-    name: '',
-    subject: subjects[0],
-    grade: "7",
-    difficulty: "1",
-    statement: '',
-    photos: [],
-    type: problemTypes[0],
-    point: "1",
-    // workplaceData: {
-    //   coefficient: 0,
-    //   display: [],
-    //   answer: [],
-    // },
-    access: 'სატესტო',
-  }
-  const savedData = localStorage.getItem('AddProblemFormData');
-  const [formData, setFormData] = useState((savedData ? JSON.parse(savedData) : template))
+    chosenClass: userClassGroups[0] || {},
+    date: new Date(),
+    duration: '',
+    testId: '',
+    testData: null,
+  };
+
+  const savedData = localStorage.getItem('AddTestFormData');
+  const [formData, setFormData] = useState(savedData ? JSON.parse(savedData) : template);
 
   useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('AddProblemFormData'));
-    if (savedData) {
-      setFormData(savedData);
-    } else {
-      localStorage.setItem('AddProblemFormData', JSON.stringify(formData));
-    }
-  }, [])
-  
-  useEffect(() => {
-    localStorage.setItem('AddProblemFormData', JSON.stringify(formData));
-    console.log(formData);
-  }, [formData])
+    localStorage.setItem('AddTestFormData', JSON.stringify(formData));
+  }, [formData]);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const { valid, errorMessage } = validateImage(file);
-    if (!valid) {
-      alert(errorMessage);
+  const handleClassChange = (e) => {
+    setFormData({
+      ...formData,
+      chosenClass: JSON.parse(e.target.value),
+    });
+  };
+
+  const handleTestAdd = async () => {
+    if (!formData.testId) return;
+
+    const ref = doc(db, 'tests', formData.testId.toString());
+    const test = await getDoc(ref);
+
+    if (!test.exists()) {
+      alert('გთხოვთ მიუთითოთ სწორი ტესტის ნომერი');
       return;
     }
-    try {
-      const fileName = `${file.name}_${uuidv4()}`;
-      
-      const storage = getStorage();
-      const fileRef = `images/problems/${fileName}`;
-      const storageRef = ref(storage, fileRef)
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
-      const obj = {
-        src: downloadURL,
-        ref: fileRef
-      }
 
-      setFormData({
-        ...formData,
-        photos: [...formData.photos, obj]
-      })
-    } catch (err) {
-      console.error("error uploading file: ", err);
-    }
-  }
+    const testData = test.data();
+    const { name, maxPoint } = testData;
 
-  const handlePhotoRemove = async (fileRef) => {
-    try {
-      const storage = getStorage();
-      const imageRef = ref(storage, fileRef);
-  
-      await deleteObject(imageRef);
-    } catch (err) {
-      console.error("Error deleting file: ", err);
-    }
-  }
+    setFormData({
+      ...formData,
+      testData: {
+        testId: formData.testId,
+        name,
+        maxPoint,
+      },
+      testId: '',
+    });
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.name === '' || formData.statement === '' || (formData.type !== 'ტექსტური' && (!formData.workplaceData || formData.workplaceData.coefficient === 0))) {
+  const submit = async () => {
+    if (formData.duration === '' || !formData.testData) {
       alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
       return;
     }
-    
-    let num = 1;
-    try {
-      num = (await getDoc(doc(db, 'problems', 'countDoc'))).data().count;
-    } finally {
-      try {
-        const obj = {
-          ...formData,
-          point: parseInt(formData.point),
-          grade: parseInt(formData.grade),
-          difficulty: parseInt(formData.difficulty),
-          problemId: num + 1,
-          date: serverTimestamp()
-        }
-        const ref = doc(db, 'problems', `${num + 1}`);
-        await setDoc(ref, obj); 
 
-        const cntRef = doc(db, 'problems', 'countDoc');
-        await updateDoc(cntRef, {count: num + 1});
-      } catch (err) {
-        console.log(err);
+    if (isNaN(formData.date.getTime())) {
+      console.error("Invalid date");
+    } else {
+      const timestamp = Timestamp.fromDate(formData.date);
+      const durationMinutes = parseInt(formData.duration, 10);
+      const endDate = new Date(formData.date.getTime() + durationMinutes * 60000);
+      const endTimestamp = Timestamp.fromDate(endDate);
+
+      try {
+        await addDoc(collection(db, 'testRecords'), {
+          classId: formData.chosenClass.classId,
+          subject: formData.chosenClass.subject,
+          testData: formData.testData,
+          startDate: timestamp,
+          endDate: endTimestamp,
+          duration: durationMinutes,
+          teacher: userName,
+        });
+      } catch (e) {
+        console.error('Error writing document: ', e);
       } finally {
-        localStorage.removeItem('AddProblemFormData');
-        alert('ამოცანა დამატებულია');
         window.location.reload();
       }
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className='addPostContainer'>
+    <div className='addPostContainer'>
+      {/* Class Selector */}
+      <select
+        onChange={handleClassChange}
+        value={JSON.stringify(formData.chosenClass)}
+      >
+        {userClassGroups &&
+          userClassGroups.map((obj, ind) => (
+            <option value={JSON.stringify(obj)} key={ind}>
+              {obj.classId + ' ' + obj.subject}
+            </option>
+          ))}
+      </select>
+
+      {/* Calendar Date Picker */}
       <div>
-        <select name='subject' onChange={handleChange} value={formData.subject}>
-          {
-            subjects.map((subject, ind) => {
-              return (
-                <option value={subject} key={ind}>{subject}</option>
-              )
-            })
-          }
-        </select>
-        <select name='grade' onChange={handleChange} value={formData.grade}>
-          {
-            [7, 8, 9, 10, 11, 12].map((grade, ind) => {
-              return (
-                <option value={grade} key={ind}>{grade}</option>
-              )
-            })
-          }
-        </select>
-        <select name='difficulty' onChange={handleChange} value={formData.difficulty}>
-          {
-            [1, 2, 3].map((diff, ind) => {
-              return (
-                <option value={diff} key={ind}>{
-                  diff === 1 ? 'ადვილი' : diff == 2 ? 'საშუალო' : 'რთული'
-                }</option>
-              )
-            })
-          }
-        </select>
-        <select name='access' onChange={handleChange} value={formData.access}>
-          {
-            ['საჯარო', 'სატესტო'].map((diff, ind) => {
-              return (
-                <option value={diff} key={ind}>{
-                  diff
-                }</option>
-              )
-            })
-          }
-        </select>
-      </div>
-      <input 
-        type='text'
-        name='name'
-        value={formData.name}
-        onChange={handleChange}
-        maxLength={30}
-        placeholder='ამოცანის სახელი'
-        required
-      />
-      <textarea 
-        type='text'
-        name='statement'
-        value={formData.statement}
-        onChange={handleChange}
-        maxLength={2000}
-        placeholder='ამოცანის პირობა'
-        required
-      />
-      <div className='addPostRow'>
-        <label className='custom-file-upload'>
-          <input 
-            type='file'
-            accept='image/*'
-            onChange={handleImageChange}
-          />
-          ფოტოს ატვირთვა
-        </label>
-      </div>
-      <div className="postPhotoHolder">
-          {
-            formData.photos.map((data, ind) => {
-              return (
-                <img className='postScrollImg' alt='photo' src={data.src} key={ind} onClick={() => {
-                  const newPhotos = formData.photos.filter(img => img !== data);
-                  setFormData({
-                    ...formData,
-                    photos: newPhotos
-                  })
-                  handlePhotoRemove(data.ref);
-                }}/>
-              )
-            })
-          }
+        <Calendar currDate={formData.date} setCurrDate={(date) => setFormData({ ...formData, date })} />
       </div>
 
-      <div>
-        ამოცანის ტიპი: 
-        <select name='type' onChange={(e) => {
-          const { workplaceData, ...restForm } = formData;
-          setFormData(restForm);
-          localStorage.setItem('AddProblemFormData', JSON.stringify(restForm));
-          handleChange(e);
-        }} value={formData.type}>
-          {
-            problemTypes.map((val, ind) => {
-              return (
-                <option value={val} key={ind}>{val}</option>
-              )
-            })
-          }
-        </select>
-      </div>  
-      
-      <CreateProblem setFormData={setFormData} type={formData.type}/>
-      
-      { (formData && formData.workplaceData && formData.workplaceData.coefficient) ?
-        <>
-          <div>
-            ქულა თითო სწორი პასუხისთვის: 
-            <select name='point' onChange={handleChange} value={formData.point}>
-              {
-                [1, 2, 3].map((val, ind) => {
-                  return (
-                    <option value={val} key={ind}>{val}</option>
-                  )
-                })
-              }
-            </select>
-          </div>
-          <div>
-              მაქსიმალური ჯამური ქულა = {formData.workplaceData.coefficient} * {formData.point} = {formData.workplaceData.coefficient * formData.point}
-          </div>
-        </> : <></>
-      }
-      <div className='problemSubmit addPostSubmit'>
-          <button type='submit'>დადასტურება</button>
+      {/* Duration Input */}
+      <input
+        type="number"
+        value={formData.duration}
+        onChange={handleChange}
+        name="duration"
+        min="0"
+        max="300"
+        placeholder='ხანგრძლივობა წუთებში'
+        required
+      />
+
+      {/* Test ID Section */}
+      <div className='addPostRow'>
+        <input
+          type='number'
+          value={formData.testId}
+          onChange={handleChange}
+          name="testId"
+          placeholder='ტესტის ნომერი'
+        />
+        <button type='button' onClick={handleTestAdd}>დამატება</button>
       </div>
-    </form>
-  )
+
+      {/* Test Data Summary */}
+      {formData.testData?.maxPoint > 0 ? (
+        <div>
+          <div>ტესტი: {formData.testData.name}</div>
+          <div>მაქსიმალური ქულა: {formData.testData.maxPoint}</div>
+        </div>
+      ) : null}
+
+      {/* Submit Section */}
+      <div className='problemSubmit addPostSubmit'>
+        <button onClick={submit}>დადასტურება</button>
+      </div>
+    </div>
+  );
 }
 
-export default AddProblem
+export default AddTest;
