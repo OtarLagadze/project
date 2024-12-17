@@ -30,6 +30,18 @@
     p {
         color: map-get($font-color, 'primary');
     }
+
+    textarea {
+        resize: none;
+        width: 100%;
+        height: fit-content;
+        overflow: hidden;
+        border: none;
+        padding: 20px;
+        box-sizing: border-box;
+        border-radius: 15px;
+        cursor: default;
+    }
 }
 
 .problemSolutionContainer {

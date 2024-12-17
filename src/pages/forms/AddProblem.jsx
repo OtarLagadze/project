@@ -105,7 +105,7 @@ function AddProblem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.name === '' || formData.statement === '' || (formData.type !== 'ტექსტური' && (!formData.workplaceData || formData.workplaceData.coefficient === 0))) {
+    if (formData.name === '' || (formData.type !== 'ტექსტური' && (!formData.workplaceData || formData.workplaceData.coefficient === 0))) {
       alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
       return;
     }
@@ -198,7 +198,6 @@ function AddProblem() {
         onChange={handleChange}
         maxLength={2000}
         placeholder='ამოცანის პირობა'
-        required
       />
       <div className='addPostRow'>
         <label className='custom-file-upload'>

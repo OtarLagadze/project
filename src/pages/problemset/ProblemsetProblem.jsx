@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './ProblemsetProblem.scss'
+// import '../forms/AddPost.scss'
+// import '../forms/AddProblem.scss'
 import { useParams } from 'react-router'
 import { useSelector } from 'react-redux';
 import { selectUserId } from '@features/userSlice';
@@ -7,6 +9,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@src/firebaseInit';
 import Workplace from '@components/workplace/Workplace';
 import ProblemReply from '@components/problemReply/ProblemReply';
+import TextareaAutosize from 'react-textarea-autosize';
 
 function ProblemsetProblem() {
   const [data, setData] = useState([]);
@@ -45,7 +48,11 @@ function ProblemsetProblem() {
             )
           }
           <div className="problemStatement">
-            <p>{data.statement}</p>
+            <TextareaAutosize 
+              type='text'
+              value={data.statement}
+              readOnly
+            />
             <div className='postPhotoHolder'>
               {
                 data.photos.map((obj, ind) => {
