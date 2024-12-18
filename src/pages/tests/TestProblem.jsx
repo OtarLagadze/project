@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@src/firebaseInit';
 import Workplace from '@components/workplace/Workplace';
+import TextareaAutosize from 'react-textarea-autosize';
 
 function TestProblem({ problemId, numero, setMessages }) {
   const [data, setData] = useState([]);
@@ -49,7 +50,11 @@ function TestProblem({ problemId, numero, setMessages }) {
             მაქსიმალური ქულა: {data.point * data.workplaceData.coefficient}
           </div>
           <div className="problemStatement">
-            <p>{data.statement}</p>
+          <TextareaAutosize 
+              type='text'
+              value={data.statement}
+              readOnly
+            />
             <div className='postPhotoHolder'>
               {
                 data.photos.map((obj, ind) => {

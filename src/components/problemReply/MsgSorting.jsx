@@ -1,6 +1,7 @@
 import React from 'react'
 
 function MsgSorting({ data }) {
+  console.log(data);
   return (
     <div>
       {

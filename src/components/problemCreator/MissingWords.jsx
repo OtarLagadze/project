@@ -27,7 +27,7 @@ function MissingWords({ setFormData }) {
       ...prevData,
       workplaceData: wpData
     }))
-    console.log(wpData);
+    console.log(wpData.workplaceData);
   }, [wpData]);
 
   return (

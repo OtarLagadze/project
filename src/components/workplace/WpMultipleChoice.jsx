@@ -17,18 +17,23 @@ function WpMultipleChoice({ data, setSubmission }) {
   };
 
   return (
-    <div className='problemSolutionContainer'>
-      {shuffledVariants.map((variant, ind) => (
-        <button
-          ref={variantRefs.current[ind]}
-          className='problemVariant'
-          key={ind}
-          onClick={() => updateStatus(variant, ind)}
-        >
-          <p>{variant}</p>
-        </button>
-      ))}
-    </div>
+    <>
+      <small>აირჩიეთ ყველა სწორი პასუხი</small>
+      <div className='problemSolutionContainer'>
+        <div>
+          {shuffledVariants.map((variant, ind) => (
+            <button
+            ref={variantRefs.current[ind]}
+            className='problemVariant'
+            key={ind}
+            onClick={() => updateStatus(variant, ind)}
+            >
+              <p>{variant}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 

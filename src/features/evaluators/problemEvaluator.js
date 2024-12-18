@@ -13,7 +13,7 @@ function evaluateMultipleChoice({ submission, answer, point }) {
       })
       answer.splice(answerIndex, 1);
     } else {
-      pointsEarned -= point / 2;
+      pointsEarned -= point;
       verdict.push({
         value: child,
         verdict: false,
@@ -64,7 +64,7 @@ function evaluateSorting(data) {
 
   for (let i = 0; i < data.submission.length; i++) {
     if (data.submission[i] === data.answer[i]) {
-      pointsEarned += data.point;
+      pointsEarned += 1;
       verdict.push({
         value: data.submission[i],
         verdict: true,
@@ -77,7 +77,36 @@ function evaluateSorting(data) {
     }
   }
 
-  pointsEarned = Math.round(pointsEarned);
+  if (pointsEarned === data.submission.length) {
+    pointsEarned = data.point;
+  } else {
+    pointsEarned = 0;
+  }
+
+  return {
+    pointsEarned: pointsEarned,
+    verdict: verdict,
+  }
+}
+
+function evaluateMissingWords(data) {
+  let pointsEarned = 0;
+  let verdict = [];
+
+  for (let i = 0; i < data.submission.length; i++) {
+    if (data.submission[i] === data.answer[i]) {
+      pointsEarned += data.point;
+      verdict.push({
+        value: data.submission[i],
+        verdict: true,
+      })
+    } else {
+      verdict.push({
+        value: data.submission[i],
+        verdict: false,
+      })
+    }
+  }
 
   return {
     pointsEarned: pointsEarned,
@@ -119,7 +148,7 @@ export function evaluateProblem(data) {
     case 'რიცხვის ჩაწერა':
       return evaluateNumber(data);
     case 'გამოტოვებული სიტყვები':
-      return evaluateSorting(data);
+      return evaluateMissingWords(data);
     default:
       return {
         pointsEarned: 0,

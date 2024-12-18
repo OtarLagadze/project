@@ -35,14 +35,14 @@ function Matching({ setFormData }) {
           type='text'
           value={first}
           onChange={(e) => setFirst(e.target.value)}
-          maxLength={50}
+          maxLength={60}
           placeholder='ვარიანტი'
         />
         <input 
           type='text'
           value={second}
           onChange={(e) => setSecond(e.target.value)}
-          maxLength={50}
+          maxLength={60}
           placeholder='პასუხი'
           id='addProblemEdge'
         />

@@ -22,9 +22,16 @@ function WpMissingWords({ data, setSubmission }) {
       }
       return item;
     });
-    
+
+    const newWords = [...words];
+    const wordIndex = newWords.indexOf(word);
+    if (wordIndex !== -1) {
+      newWords.splice(wordIndex, 1);
+    }
+
     setFilledText(newText);
     setSelectedWords([...selectedWords, word]);
+    setWords(newWords);
   };
 
   useEffect(() => {
@@ -53,7 +60,7 @@ function WpMissingWords({ data, setSubmission }) {
         </div>
         <div className='problemSolutionContainer'>
           {
-            words.filter(word => !selectedWords.includes(word)).map((word, ind) => (
+            words.map((word, ind) => (
               <button className='problemVariant' key={ind} onClick={() => updateStatus(word)}>
                 <p>{word}</p>
               </button>
