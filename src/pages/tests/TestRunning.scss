@@ -1,0 +1,52 @@
+@import '@src/globals.scss';
+@import '@src/breackpoints.scss';
+
+.testPopup {
+  @include custom-card;
+  padding: 20px;
+  margin: 10px;
+  position: fixed;
+  top: 0;
+
+  h1 {
+    font-weight: bold;
+  }
+}
+
+#edgeCaseButton {
+  margin-bottom: 40px;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.popupContent {
+  @include custom-card;
+  padding: 20px;
+  h2 {
+    font-size: larger;
+  }
+  text-align: center;
+}
+
+.closePopupButton {
+  @include custom-card;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}

@@ -58,7 +58,6 @@ function Workplace({ data, setReplyData, fromTest }) {
       return;
     }
     setReplyData(res);
-    //answer not in variants
   }
 
   useEffect(() => {

@@ -20,18 +20,16 @@ function WpMultipleChoice({ data, setSubmission }) {
     <>
       <small>აირჩიეთ ყველა სწორი პასუხი</small>
       <div className='problemSolutionContainer'>
-        <div>
-          {shuffledVariants.map((variant, ind) => (
-            <button
-            ref={variantRefs.current[ind]}
-            className='problemVariant'
-            key={ind}
-            onClick={() => updateStatus(variant, ind)}
-            >
-              <p>{variant}</p>
-            </button>
-          ))}
-        </div>
+        {shuffledVariants.map((variant, ind) => (
+          <button
+          ref={variantRefs.current[ind]}
+          className='problemVariant'
+          key={ind}
+          onClick={() => updateStatus(variant, ind)}
+          >
+            <p>{variant}</p>
+          </button>
+        ))}
       </div>
     </>
   );

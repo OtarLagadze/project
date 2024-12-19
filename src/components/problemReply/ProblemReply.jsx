@@ -23,6 +23,7 @@ const ComponentToRender = ({ type, data }) => {
 }
 
 function ProblemReply({ replyData }) {
+  if (!replyData) return;
   return <>
     <div className="problemHeader">
       ქულა: {replyData.evaluator.pointsEarned} / {replyData.maxPoint}

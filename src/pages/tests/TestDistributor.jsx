@@ -5,6 +5,7 @@ import { db } from '@src/firebaseInit';
 import { formatTimeLeft } from '@features/formatTimeLeft';
 import TestCountdown from './TestCountdown';
 import TestRunning from './TestRunning';
+import TestResults from './TestResults';
 
 function TestDistributor() {
   const { classId, recordId } = useParams();
@@ -60,9 +61,9 @@ function TestDistributor() {
     case 'countdown':
       return <TestCountdown testData={data} display={countdown}/>
     case 'running':
-      return <TestRunning timeLeft={countdown}/>
+      return <TestRunning timeLeft={countdown} subject={data.testData.name} maxPoint={data.testData.maxPoint}/>
     case 'finished':
-      return <div>results page</div>
+      return <TestResults />
     default:
       return <div>დაფიქსირდა შეცდომა</div>
   }

@@ -33,20 +33,18 @@ function WpSorting({ data, setSubmission }) {
   return (
     <div>
       <div className='problemSolutionContainer'>
-        <div>
-          {orderedData.map(({ variant, index }, ind) => {
-            return (
-              <button
-              className="problemVariant"
-              key={ind}
-              onClick={() => updateStatus(ind)}
-              >
-                <span style={{ fontWeight: 'bold' }}>{`${index > 0 ? `${index}. ` : ''}`}</span>
-                <p>{variant}</p>
-              </button>
-            );
-          })}
-        </div>
+        {orderedData.map(({ variant, index }, ind) => {
+          return (
+            <button
+            className="problemVariant"
+            key={ind}
+            onClick={() => updateStatus(ind)}
+            >
+              <span style={{ fontWeight: 'bold' }}>{`${index > 0 ? `${index}. ` : ''}`}</span>
+              <p>{variant}</p>
+            </button>
+          );
+        })}
       </div>
       <button className='problemVariant' onClick={reset}>თავიდან</button>
     </div>

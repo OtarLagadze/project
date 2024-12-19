@@ -1,15 +1,21 @@
 import { db } from '@src/firebaseInit';
-import { doc, getDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { doc, getDoc, collection, addDoc, setDoc, serverTimestamp } from 'firebase/firestore'; // Import `collection` and `addDoc`
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import TestProblem from './TestProblem';
 import TestInstruction from '@components/TestInstruction';
+import './testRunning.scss';
+import ProblemReply from '@components/problemReply/ProblemReply';
+import { selectUserName } from '@features/userSlice';
+import { useSelector } from 'react-redux';
 
-function TestRunning({ timeLeft }) {
+function TestRunning({ timeLeft, subject, maxPoint }) {
   const { testId } = useParams();
+  const username = useSelector(selectUserName);
   const [data, setData] = useState({});
   const [messages, setMessages] = useState([]);
   const [test, setTest] = useState([]);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   useEffect(() => {
     const fetchTestData = async () => {
@@ -19,7 +25,7 @@ function TestRunning({ timeLeft }) {
         const testData = res.data();
         setData(testData);
 
-        const savedTest = localStorage.getItem(`test_${testId}`);
+        const savedTest = localStorage.getItem(`${username}_test_${testId}`);
         if (savedTest) {
           setTest(JSON.parse(savedTest));
         } else {
@@ -33,7 +39,6 @@ function TestRunning({ timeLeft }) {
     fetchTestData();
   }, [testId]);
 
-  // Generate unique test with random exercises from each problem
   const generateTest = (testData) => {
     if (!testData || !testData.problems) return;
 
@@ -46,33 +51,59 @@ function TestRunning({ timeLeft }) {
       }
     });
 
-    console.log(generatedTest);
-    localStorage.setItem(`test_${testId}`, JSON.stringify(generatedTest));
+    localStorage.setItem(`${username}_test_${testId}`, JSON.stringify(generatedTest));
     setTest(generatedTest);
   };
 
-  const handleSubmit = () => {
-    //save subbmisions and then run testEvaluator on them
-    messages.forEach(({ problemNumero, message }) => {
-      console.log(problemNumero, message);
-    });
-  }
+  const handleSubmit = async () => {
+    setPopupVisible(true);
+    try {
+      const userTestRecordRef = doc(db, 'userTestRecords', username);
+      let usersPoint = 0;
+      messages.forEach(msg => {
+        if (msg.message.evaluator.pointsEarned) usersPoint += msg.message.evaluator.pointsEarned;
+      });
+      const testRecord = {
+        [subject]: {
+          test,
+          messages,
+          maxPoint,
+          usersPoint,
+          lastUpdated: serverTimestamp(),
+        },
+      };
+  
+      await setDoc(userTestRecordRef, testRecord, { merge: true });
+      console.log('Test record updated successfully:', testRecord);
+    } catch (error) {
+      console.error('Error updating test record:', error);
+    }
+  };
 
-  // const handleSubmit = () => {
-  //   if (!messages || messages.length === 0) {
-  //     alert('გთხოვთ შეავსოთ ყველა დავალება');
-  //     return;
-  //   }
+  useEffect(() => {
+    if (timeLeft === 0) {
+      setPopupVisible(false);
+    }
+  }, [timeLeft]);
 
-  //   console.log('User responses:', messages);
-
-  //   localStorage.removeItem(`test_${testId}`);
-  //   alert('ტესტი დასრულებულია');
-  //   window.location.reload();
-  // };
+  const closePopup = () => {
+    setPopupVisible(false);
+  };
 
   return (
     <div>
+      {popupVisible && (
+        <div className="popupOverlay">
+          <div className="popupContent">
+            <h2>თქვენ წარმატებით დაასრულეთ ტესტი</h2>
+            <h1>თქვენს შეფასებას გაიგებთ ტესტის დასრულებისთანავე</h1>
+            <h1>დასრულებამდე დარჩა: {timeLeft}</h1>
+            <button className="closePopupButton" onClick={closePopup}>
+              <h1>დახურვა</h1>
+            </button>
+          </div>
+        </div>
+      )}
       <div className="problemContainer">
         <div className="problemHeader">
           <h1>{data.name}</h1>
@@ -84,20 +115,49 @@ function TestRunning({ timeLeft }) {
           <small>მაქსიმალური ქულა - {data.maxPoint}</small>
         </div>
       </div>
-      <TestInstruction instructionId={data.instructionId}/>
-      {
-        timeLeft ? <h1>დარჩენილია {timeLeft}</h1> : <></>
-      }   
-      { test ?
+      <TestInstruction instructionId={data.instructionId} />
+      <div className="testPopup">
+        <div>
+          <small>თქვენი კოდი</small>
+          <h1>{username}</h1>
+        </div>
+        {timeLeft && (
+          <div>
+            <small>დარჩენილია</small>
+            <h1>{timeLeft}</h1>
+          </div>
+        )}
+      </div>
+      {test ? (
         test.map(({ exerciseId }, ind) => {
-          return <TestProblem problemId={exerciseId} numero={ind + 1} setMessages={setMessages} key={ind}/>
-        }) : <></>
-      }
-      <div className='problemSubmit'>
+          return (
+            <TestProblem
+              problemId={exerciseId}
+              numero={ind + 1}
+              setMessages={setMessages}
+              key={ind}
+            />
+          );
+        })
+      ) : (
+        <></>
+      )}
+      <div className="problemSubmit" id="edgeCaseButton">
         <button onClick={handleSubmit}>დასრულება</button>
       </div>
+      {messages.map(({ problemNumero, message }, ind) => {
+        if (!message) return null;
+        return (
+          <div className="problemContainer" key={ind}>
+            <div className="problemHeader">
+              <h1>დავალება {problemNumero}</h1>
+            </div>
+            <ProblemReply replyData={message} />
+          </div>
+        );
+      })}
     </div>
-  )
+  );
 }
 
-export default TestRunning
+export default TestRunning;

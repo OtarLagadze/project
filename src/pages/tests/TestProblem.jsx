@@ -10,6 +10,7 @@ function TestProblem({ problemId, numero, setMessages }) {
   const [replyData, setReplyData] = useState(null);
 
   useEffect(() => {
+    if (!setMessages) return;
     setMessages((prevData) => {
       const newMessages = prevData.filter(child => child.problemNumero !== numero);
       return [
@@ -55,11 +56,11 @@ function TestProblem({ problemId, numero, setMessages }) {
               value={data.statement}
               readOnly
             />
-            <div className='postPhotoHolder'>
+            <div className='problemsetPhotoHolder'>
               {
                 data.photos.map((obj, ind) => {
                   return (
-                    <img src={obj.src} key={ind} alt='img' className='postScrollImg'/>
+                    <img src={obj.src} key={ind} alt='img' className='problemsetImg' style={{height: '350px'}}/>
                   )
                 })
               }

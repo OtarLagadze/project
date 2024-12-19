@@ -1,0 +1,12 @@
+@import '@src/globals.scss';
+@import '@src/breackpoints.scss';
+
+#finalPoints {
+  text-align: center;
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: rgb(85, 255, 175);
+  }
+}
