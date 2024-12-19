@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { db } from '@src/firebaseInit';
 import { doc, getDoc } from 'firebase/firestore';
-import { selectUserName } from '@features/userSlice';
+import { selectUserName, selectUserId } from '@features/userSlice';
 import TestProblem from './TestProblem';
 import ProblemReply from '@components/problemReply/ProblemReply';
 import './testResults.scss'
@@ -11,13 +11,15 @@ import './testResults.scss'
 function TestResults() {
   const { subject } = useParams(); 
   const userName = useSelector(selectUserName); 
+  const userId = useSelector(selectUserId); 
   const [subjectData, setSubjectData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(userName, userId, userName + userId);
     const fetchSubjectData = async () => {
       try {
-        const userDocRef = doc(db, 'userTestRecords', userName);
+        const userDocRef = doc(db, 'userTestRecords', userName + userId);
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {

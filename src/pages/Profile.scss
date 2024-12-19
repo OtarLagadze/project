@@ -1,0 +1,68 @@
+@import '@src/globals.scss';
+@import '@src/breackpoints.scss';
+
+.profile-container {
+  // @include custom-card;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.profile-view, .auth-view {
+  @include custom-card;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  text-align: center;
+}
+
+.auth-view .input, .auth-view .select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: 1px solid map-get($color-mp, 'drop');
+}
+
+.auth-view .btn {
+  width: 100%;
+  padding: 12px;
+  background-color: map-get($color-mp, 'purple');
+  color: white;
+  border: none;
+  border-radius: 4px;
+  // font-size: 16px;
+  cursor: pointer;
+
+}
+
+.auth-view .link-btn {
+  margin-top: 10px;
+  color: map-get($color-mp, 'purple');
+  border: none;
+  font-weight: bold;
+  background: none;
+  // font-size: 14px;
+  cursor: pointer;
+}
+
+.auth-view .link-btn:hover {
+  text-decoration: underline;
+}
+
+.message {
+  margin-top: 10px;
+  // font-size: 14px;
+  color: red;
+}
+
+.sign-out {
+  background-color: #f44336;
+}
+
+.sign-out:hover {
+  background-color: #e53935;
+}
+

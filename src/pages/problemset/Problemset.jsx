@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react'
 import './Problemset.scss'
 import { Link, useParams } from "react-router-dom"
 import { useSelector } from 'react-redux';
-import { selectUserRole } from '@features/userSlice';
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '@src/firebaseInit';
 
 function Problemset() {
-  const userRole = useSelector(selectUserRole);
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalProblems, setTotalProblems] = useState(0);
@@ -57,7 +55,7 @@ function Problemset() {
       <div className="list">
         <div className="header">
           <p>ყველა ამოცანა</p>
-          { userRole === 'teacher' && 
+          { username === 'neoschool' && 
             <div className='problemAddProblem'>
               <Link to='/addProblem'>ამოცანის დამატება</Link>
             </div>

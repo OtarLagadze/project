@@ -8,7 +8,7 @@ import TestRunning from './TestRunning';
 import TestResults from './TestResults';
 
 function TestDistributor() {
-  const { classId, recordId } = useParams();
+  const { recordId } = useParams();
   const [data, setdata] = useState(null);
   const [status, setStatus] = useState('');
   const [countdown, setCountdown] = useState('');
@@ -24,7 +24,7 @@ function TestDistributor() {
     };
 
     fetchdata();
-  }, [classId, recordId]);
+  }, [recordId]);
 
   useEffect(() => {
     if (data) {

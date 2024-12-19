@@ -7,6 +7,6 @@
     font-size: 2.5rem;
     margin-bottom: 30px;
     font-weight: bold;
-    color: rgb(85, 255, 175);
+    color: map-get($color-mp, $key: 'purple');
   }
 }

@@ -13,7 +13,7 @@ function evaluateMultipleChoice({ submission, answer, point }) {
       })
       answer.splice(answerIndex, 1);
     } else {
-      pointsEarned -= point;
+      pointsEarned -= point / 2;
       verdict.push({
         value: child,
         verdict: false,

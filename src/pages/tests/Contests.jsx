@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Contests.scss';
 import { useSelector } from 'react-redux';
-import { selectUserRole, selectUserName, selectUserClassId } from '@features/userSlice';
+import { selectUserName, selectUserClassId } from '@features/userSlice';
 import { Link } from 'react-router-dom';
 import { db } from '@src/firebaseInit';
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -14,7 +14,7 @@ const formatDate = (date) => {
 
 const TestCard = ({ test }) => {
   return (
-    <Link to={`/tests/${test.classId}/${test.subject}/${test.id}/${test.testData.testId}`} key={test.id} className='testItem'>
+    <Link to={`/tests/${test.subject}/${test.id}/${test.testData.testId}`} key={test.id} className='testItem'>
       <div className='testItemRow'>  
         <p>{test.subject}</p>
         <p>{test.classId}</p>
@@ -47,19 +47,18 @@ const TestsRow = ({ testType, arr }) => {
 }
 
 function Contests() {
-  const userRole = useSelector(selectUserRole);
   const userName = useSelector(selectUserName);
   const userClassId = useSelector(selectUserClassId);
   const [tests, setTests] = useState({ active: [], upcoming: [], finished: [] });
 
   useEffect(() => {
     const fetchTests = async () => {
-      let q;
-      if (userRole === 'teacher') {
-        q = query(collection(db, 'testRecords'), where('teacher', '==', userName));
-      } else if (userRole === 'student') {
-        q = query(collection(db, 'testRecords'), where('classId', '==', userClassId));
-      }
+      let q = query(collection(db, 'testRecords'));
+      // if (userRole === 'teacher') {
+      //   q = query(collection(db, 'testRecords'), where('teacher', '==', userName));
+      // } else if (userRole === 'student') {
+      //   q = query(collection(db, 'testRecords'), where('classId', '==', userClassId));
+      // }
       if (q) {
         try {
           const querySnapshot = await getDocs(q);
@@ -94,12 +93,12 @@ function Contests() {
     };
 
     fetchTests();
-  }, [userRole, userName, userClassId]);
+  }, [userName, userClassId]);
 
   return (
     <>
       <div className='consWrapper'>
-        {userRole === 'teacher' && 
+        {userName === 'neoschool' && 
           <div className='postsAddPost'>
             <Link to='/addTest'>ტესტის ჩანიშვნა</Link>
             <Link to='/createTest'>ტესტის შექმნა</Link>
@@ -109,9 +108,33 @@ function Contests() {
           <TestsRow testType={'მიმდინარე'} arr={tests.active}/>
           <TestsRow testType={'დაგეგმილი'} arr={tests.upcoming}/>
           <TestsRow testType={'დასრულებული'} arr={tests.finished}/>
+          <div className='testsCategory'>
+            <h1> შედეგების ნახვა </h1>
+            <div className='testsRow'>
+              <Link to={`/results/ქიმია`} className='testItem'>
+                <div className=''>  
+                  <h1>ქიმია</h1>
+                </div>
+              </Link>
+              <Link to={`/results/ფიზიკა`} className='testItem'>
+                <div className=''>  
+                  <h1>ფიზიკა</h1>
+                </div>
+              </Link>
+              <Link to={`/results/ბიოლოგია`} className='testItem'>
+                <div className=''>  
+                  <h1>ბიოლოგია</h1>
+                </div>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
-      <TestsList />
+      <div className='iframeHolder'>
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScgF4fVBNeE05h0UR1GlqJg8aY5JQUe5qpx5OkcMJMUAlJ81A/viewform?embedded=true"  
+        frameborder="0" marginheight="0" marginwidth="0">იტვირთება…</iframe>
+      </div>
+      {/* <TestsList /> */}
     </>
   );
 }

@@ -1,28 +1,29 @@
 import { Timestamp, addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectUserClassGroups, selectUserName } from '@features/userSlice';
+import { selectUserName } from '@features/userSlice';
 import { db } from '@src/firebaseInit';
 import Calendar from '@components/Calendar';
 import './AddTest.scss';
 
 function AddTest() {
-  const userClassGroups = useSelector(selectUserClassGroups);
   const userName = useSelector(selectUserName);
-  const [chosenClass, setChosenClass] = useState(userClassGroups[0]);
   const [date, setDate] = useState(new Date());
   const [duration, setDuration] = useState('');
   const [testId, setTestId] = useState('');
   const [testData, setTestData] = useState(null);
-
+  
+  const subjects = ['მათემატიკა', 'ქართული', 'ინგლისური', 'ისტორია',
+    'გეოგრაფია', 'ფიზიკა', 'ქიმია', 'ბიოლოგია', 'ხელოვნება',
+    'მუსიკა', 'მოქალაქეობა', 'რუსული'];
+    
+  const [subject, setSubject] = useState(subjects[0]);
   const submit = async () => {
     if (duration === '' || !testData) {
       alert('გთხოვთ შეავსოთ ყველა საჭირო ველი');
       return;
     }
-    if (isNaN(date.getTime())) {
-      console.error("Invalid date");
-    } else {
+
       const timestamp = Timestamp.fromDate(date);
       const durationMinutes = parseInt(duration, 10);
       const endDate = new Date(date.getTime() + durationMinutes * 60000);
@@ -30,20 +31,18 @@ function AddTest() {
 
       try {
         await addDoc(collection(db, 'testRecords'), {
-          classId: chosenClass.classId,
-          subject: chosenClass.subject,
+          subject: subject,
           testData: testData,
           startDate: timestamp,
           endDate: endTimestamp,
           duration: durationMinutes,
-          teacher: userName
         });
       } catch (e) {
         console.error('Error writing document: ', e);
       } finally {
+        alert('ტესტი ჩანიშნულია');
         window.location.reload();
       }
-    }
   };
 
   const handleTestAdd = async () => {
@@ -71,15 +70,15 @@ function AddTest() {
 
   return (
     <div className='addPostContainer'>
-      <select onChange={(e) => setChosenClass(JSON.parse(e.target.value))} value={JSON.stringify(chosenClass)}>
-        {userClassGroups &&
-          userClassGroups.map((obj, ind) => (
-            <option value={JSON.stringify(obj)} key={ind}>
-              {obj.classId + ' ' + obj.subject}
-            </option>
-          ))
-        }
-      </select>
+        <select name='subject' onChange={(e) => setSubject(e.target.value)} value={subject}>
+          {
+            subjects.map((subject, ind) => {
+              return (
+                <option value={subject} key={ind}>{subject}</option>
+              )
+            })
+          }
+        </select>
       <div>
         <Calendar currDate={date} setCurrDate={setDate} />
       </div>

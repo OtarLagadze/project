@@ -13,6 +13,19 @@
     margin-bottom: 70px;
 }
 
+.iframeHolder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // background-color: red;
+    height: 2200px;
+
+    iframe {
+        height: 100%;
+        width: 100%;
+    }
+}
+
 .testsCategory {
     
     h1 {

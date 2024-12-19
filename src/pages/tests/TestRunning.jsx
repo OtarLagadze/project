@@ -6,12 +6,13 @@ import TestProblem from './TestProblem';
 import TestInstruction from '@components/TestInstruction';
 import './testRunning.scss';
 import ProblemReply from '@components/problemReply/ProblemReply';
-import { selectUserName } from '@features/userSlice';
+import { selectUserId, selectUserName } from '@features/userSlice';
 import { useSelector } from 'react-redux';
 
 function TestRunning({ timeLeft, subject, maxPoint }) {
   const { testId } = useParams();
   const username = useSelector(selectUserName);
+  const userId = useSelector(selectUserId);
   const [data, setData] = useState({});
   const [messages, setMessages] = useState([]);
   const [test, setTest] = useState([]);
@@ -58,7 +59,7 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
   const handleSubmit = async () => {
     setPopupVisible(true);
     try {
-      const userTestRecordRef = doc(db, 'userTestRecords', username);
+      const userTestRecordRef = doc(db, 'userTestRecords', username + userId);
       let usersPoint = 0;
       messages.forEach(msg => {
         if (msg.message.evaluator.pointsEarned) usersPoint += msg.message.evaluator.pointsEarned;
@@ -81,8 +82,8 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
   };
 
   useEffect(() => {
-    if (timeLeft === 0) {
-      setPopupVisible(false);
+    if (timeLeft === 2) {
+      handleSubmit();
     }
   }, [timeLeft]);
 
@@ -119,7 +120,7 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
       <div className="testPopup">
         <div>
           <small>თქვენი კოდი</small>
-          <h1>{username}</h1>
+          <h1>{userId}</h1>
         </div>
         {timeLeft && (
           <div>
@@ -145,7 +146,7 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
       <div className="problemSubmit" id="edgeCaseButton">
         <button onClick={handleSubmit}>დასრულება</button>
       </div>
-      {messages.map(({ problemNumero, message }, ind) => {
+      {/* {messages.map(({ problemNumero, message }, ind) => {
         if (!message) return null;
         return (
           <div className="problemContainer" key={ind}>
@@ -155,7 +156,7 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
             <ProblemReply replyData={message} />
           </div>
         );
-      })}
+      })} */}
     </div>
   );
 }
