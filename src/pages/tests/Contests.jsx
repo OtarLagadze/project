@@ -4,8 +4,10 @@ import { useSelector } from 'react-redux';
 import { selectUserName, selectUserClassId } from '@features/userSlice';
 import { Link } from 'react-router-dom';
 import { db } from '@src/firebaseInit';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, getDocs } from 'firebase/firestore';
 import TestsList from './TestsList';
+import * as XLSX from "xlsx";
+import Export from './Export';
 
 const formatDate = (date) => {
   const options = { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
@@ -27,11 +29,11 @@ const TestCard = ({ test }) => {
         </div>
       </div>
     </Link>
-  )
-}
+  );
+};
 
 const TestsRow = ({ testType, arr }) => {
-  if (arr.length === 0) return;
+  if (arr.length === 0) return null;
   return (
     <div className='testsCategory'>
       <h1> {testType} </h1>
@@ -43,8 +45,8 @@ const TestsRow = ({ testType, arr }) => {
         }
       </div>
     </div>
-  )
-}
+  );
+};
 
 function Contests() {
   const userName = useSelector(selectUserName);
@@ -54,11 +56,6 @@ function Contests() {
   useEffect(() => {
     const fetchTests = async () => {
       let q = query(collection(db, 'testRecords'));
-      // if (userRole === 'teacher') {
-      //   q = query(collection(db, 'testRecords'), where('teacher', '==', userName));
-      // } else if (userRole === 'student') {
-      //   q = query(collection(db, 'testRecords'), where('classId', '==', userClassId));
-      // }
       if (q) {
         try {
           const querySnapshot = await getDocs(q);
@@ -130,11 +127,7 @@ function Contests() {
           </div>
         </div>
       </div>
-      <div className='iframeHolder'>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScgF4fVBNeE05h0UR1GlqJg8aY5JQUe5qpx5OkcMJMUAlJ81A/viewform?embedded=true"  
-        frameborder="0" marginheight="0" marginwidth="0">იტვირთება…</iframe>
-      </div>
-      {/* <TestsList /> */}
+      <Export />
     </>
   );
 }
