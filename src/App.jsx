@@ -10,7 +10,7 @@ import Class from "@pages/class/Class"
 import Problemset from "@pages/problemset/Problemset"
 import Sports from "@pages/Sports"
 import Chat from "@pages/Chat"
-import Profile from "@pages/Profile"
+import Profile from "@pages/profile/Profile"
 import ProblemsetProblem from "@pages/problemset/ProblemsetProblem"
 import PostsPost from "@pages/posts/PostsPost"
 import ClassPage from "@pages/class/ClassPage"
@@ -28,6 +28,8 @@ import { doc, getDoc } from "firebase/firestore"
 import CreateTest from "@pages/forms/CreateTest"
 import TestDistributor from "@pages/tests/TestDistributor"
 import TestRunning from "@pages/tests/TestRunning"
+import Register from "@pages/auth/Register"
+import Login from "@pages/auth/Login"
 
 function App() {
   const [active, setActive] = useState(true);
@@ -96,7 +98,7 @@ function App() {
               <Route path="/createTest" element={<CreateTest />} />
 
               <Route element={<PrivateRoute role={'containClass'} url='/405' />}>
-                <Route path="/addTopic/:classId/:subject" element={<AddTopic />} />
+                <Route path="/addTopic/:class_uid/:subject_uid" element={<AddTopic />} />
               </Route>
             </Route>
 
@@ -107,7 +109,7 @@ function App() {
 
             <Route element={<PrivateRoute role={'containClass'} url='/405'/>}>
               <Route path="/tests/:classId/:subject/:recordId/:testId" element={<TestDistributor />} />
-              <Route path="/class/:classId/:subject" element={<ClassPage />} />
+              <Route path="/class/:class_uid/:subject_uid" element={<ClassPage />} />
             </Route>
 
             <Route path="/posts/page/:pageId" element={<Posts />} />
@@ -122,6 +124,9 @@ function App() {
             <Route path="/sports" element={<Sports />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
             <Route path="/401" element={<NotFound msg={'გთხოვთ გაიაროთ ავტორიზაცია'}/>} />
             <Route path="/405" element={<NotFound msg={'თქვენ არ გაქვთ ამ გვერდზე წვდომის უფლება'}/>} />

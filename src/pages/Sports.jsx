@@ -2,7 +2,7 @@ import React from 'react'
 
 function Sports() {
   return (
-    <div>სპორტი</div>
+    <div>იხილეთ სიახლეების გვერდი</div>
   )
 }
 

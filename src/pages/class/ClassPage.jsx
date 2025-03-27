@@ -46,7 +46,7 @@ function ClassPage() {
   useEffect(() => {
     const fetch = async () => {
         try {
-            const ref = collection(db, `classGroups/${params.classId}/subjects/${params.subject}/topics`);
+            const ref = collection(db, `classGroups/${params.class_uid}/subjects/${params.subject_uid}/topics`);
             const res = await getDocs(ref);
             setData(res.docs.map(doc => ({
                 name: doc.id,
@@ -65,10 +65,10 @@ function ClassPage() {
   return (
     <div className='cpageContainer'>
         { userRole === 'teacher' && 
-            <Link to={`/addTopic/${params.classId}/${params.subject}`}>დამატება</Link>
+            <Link to={`/addTopic/${params.class_uid}/${params.subject_uid}`}>დამატება</Link>
         }
         <div className="cpageHeader">
-            <h1>{params.subject}</h1>
+            <h1>{params.display}</h1>
         </div>
         {
             data.map((data, ind) => {

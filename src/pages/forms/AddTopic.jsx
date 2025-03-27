@@ -43,11 +43,11 @@ function AddTopic() {
 
     try {
       const obj = {
-        problems: Problems,
         comments: TopicComment,
+        problems: Problems,
         links: links
       }
-      const ref = doc(db, `classGroups/${params.classId}/subjects/${params.subject}/topics`, `${TopicName}`);
+      const ref = doc(db, `classGroups/${params.class_uid}/subjects/${params.subject_uid}/topics`, `${TopicName}`);
       await setDoc(ref, obj); 
     } catch (err) {
       console.log(err);

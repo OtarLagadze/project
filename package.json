@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
     "better-react-mathjax": "^2.0.4-beta1",
+    "date-fns": "^4.1.0",
     "firebase": "^10.7.1",
     "react": "^18.2.0",
     "react-datepicker": "^7.3.0",

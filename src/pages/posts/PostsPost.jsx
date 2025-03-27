@@ -57,7 +57,7 @@ function PostsPost() {
                 name: userName,
                 comment: addComment,
                 date: serverTimestamp(),
-                image: userImage,
+                image: userImage || '',         
                 authorId: userId
             };
 
@@ -89,7 +89,7 @@ function PostsPost() {
             <div className='postContainer'>
                 <div className="postHeader">
                     <div className="postHeaderImg">
-                        <img src={data.authorImage} alt='photo'/>
+                        {data.authorImage && <img src={data.authorImage} alt='photo'/> }
                     </div>
                     <div className="postHeaderTxt">
                         <h1>{data.name}</h1>
@@ -134,7 +134,7 @@ function PostsPost() {
                         comments.map((data, ind) => {
                             return (
                                 <div className="postComment" key={ind}>
-                                    <img alt='photo' src={data.image} />
+                                    {data.image && <img alt='photo' src={data.image} /> }
                                     <div className="postCommentData">
                                         <p id='username'>{data.name}</p>
                                         <p>{data.comment}</p>
