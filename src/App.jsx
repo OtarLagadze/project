@@ -1,77 +1,82 @@
-import React, { useEffect, useState } from "react"
-import './App.scss'
-import './globals.scss'
-import { Navigate, Route, Routes } from "react-router-dom"
-import Navbar from "@components/Navbar"
-import Home from "@pages/Home"
-import Posts from "@pages/posts/Posts"
-import Contests from "@pages/tests/Contests"
-import Class from "@pages/class/Class"
-import Problemset from "@pages/problemset/Problemset"
-import Sports from "@pages/Sports"
-import Chat from "@pages/Chat"
-import Profile from "@pages/profile/Profile"
-import ProblemsetProblem from "@pages/problemset/ProblemsetProblem"
-import PostsPost from "@pages/posts/PostsPost"
-import ClassPage from "@pages/class/ClassPage"
-import AddProblem from "@pages/forms/AddProblem"
-import AddPost from "@pages/forms/AddPost"
-import PrivateRoute from "@components/PrivateRoute"
-import NotFound from "@components/NotFound"
-import AddTopic from "@pages/forms/AddTopic"
-import AddTest from "@pages/forms/AddTest"
+import React, { useEffect, useState } from "react";
+import './App.scss';
+import './globals.scss';
+import { Navigate, Route, Routes } from "react-router-dom";
+import Navbar from "@components/Navbar";
+import Home from "@pages/Home";
+import Posts from "@pages/posts/Posts";
+import Contests from "@pages/tests/Contests";
+import Class from "@pages/class/Class";
+import Problemset from "@pages/problemset/Problemset";
+import Sports from "@pages/Sports";
+import Chat from "@pages/Chat";
+import Profile from "@pages/profile/Profile";
+import ProblemsetProblem from "@pages/problemset/ProblemsetProblem";
+import PostsPost from "@pages/posts/PostsPost";
+import ClassPage from "@pages/class/ClassPage";
+import AddProblem from "@pages/forms/AddProblem";
+import AddPost from "@pages/forms/AddPost";
+import PrivateRoute from "@components/PrivateRoute";
+import NotFound from "@components/NotFound";
+import AddTopic from "@pages/forms/AddTopic";
+import AddTest from "@pages/forms/AddTest";
 
-import { db, auth } from "@src/firebaseInit"
-import { useDispatch, useSelector } from "react-redux"
-import { selectUserId, selectUserRole, setActiveUser } from "@features/userSlice"
-import { doc, getDoc } from "firebase/firestore"
-import CreateTest from "@pages/forms/CreateTest"
-import TestDistributor from "@pages/tests/TestDistributor"
-import TestRunning from "@pages/tests/TestRunning"
-import Register from "@pages/auth/Register"
-import Login from "@pages/auth/Login"
+import { db, auth } from "@src/firebaseInit";
+import { useDispatch } from "react-redux";
+import { setLogOutUser, setActiveUser } from "@features/userSlice";
+import { doc, getDoc } from "firebase/firestore";
+import CreateTest from "@pages/forms/CreateTest";
+import TestDistributor from "@pages/tests/TestDistributor";
+import TestRunning from "@pages/tests/TestRunning";
+import Register from "@pages/auth/Register";
+import Login from "@pages/auth/Login";
 
 function App() {
   const [active, setActive] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const userId = useSelector(selectUserId);
-  const userRole = useSelector(selectUserRole);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const user = auth.currentUser;
-        setLoading(user ? true : false);
-        if (!user) return;
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
 
-        const docRef = doc(db, 'users', user.uid);
-        const res = (await getDoc(docRef)).data()
+            dispatch(setActiveUser({
+              userId: user.uid,
+              userName: userData.username || "No Username",
+              userRole: userData.role || "No Role",
+              userClassId: userData.classId || null,
+              userClassGroups: userData.classGroups || [],
+              userVerified: userData.isVerified || false,
+              userCity: userData.city || "No city",
+              userSchool: userData.school || "No school",
+              userEmail: userData.email || "No email",
+              userBirthday: userData.birthday || "No birthday",
+              userIsHeadTeacher: userData.isHeadTeacher || false,
+              userGrade: userData.grade || null,
+              userGradeId: userData.gradeId || null,
+              userSubject: userData.subject || "No subject",
+              userClass_uid: userData.class_uid || '',
+            }));
 
-        dispatch(
-          setActiveUser({
-            userName: user.displayName,
-            userPhotoUrl: user.photoURL,
-            userId: user.uid,
-            userClassId: '10გ',
-            userRole: res.role,
-            userClassGroups: res.role === 'teacher' ? res.classGroups : []
-          })
-        );
-      } catch (error) {
-        alert(error);
-      } finally {
-        setLoading(false);
+            console.log("Fetched user data:", userData);
+          } else {
+            console.warn("User document does not exist in Firestore");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        dispatch(setLogOutUser());
+        console.log("User signed out, removing active user");
       }
-    };
+    });
 
-    if (userId) {
-      setLoading(false);
-      return;
-    }
-    const unsubscribe = auth.onAuthStateChanged(fetchData);
-
-    return unsubscribe;
+    return () => unsubscribe(); 
   }, [dispatch]);
 
   return (
@@ -134,7 +139,7 @@ function App() {
         </Routes> }
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

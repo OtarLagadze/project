@@ -51,7 +51,7 @@ function Register() {
       });
 
       alert("რეგისტრაცია წარმატებით გაიარეთ");
-      navigate("/login");
+      navigate("/profile");
     } catch (error) {
       console.error("Error registering user: ", error);
       alert("რეგისტრაციისას დაფიქსირდა შეცდომა");
