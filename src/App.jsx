@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import './App.scss'
 import './globals.scss'
-import { Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 import Navbar from "@components/Navbar"
 import Home from "@pages/Home"
 import Posts from "@pages/posts/Posts"
@@ -89,7 +89,7 @@ function App() {
       <div className="mainRender">
         {!loading && 
         <Routes>
-            <Route path="/" element={<Posts />}/>
+            <Route path="/" element={<Navigate to="/posts/page/1" />} />
 
             <Route element={<PrivateRoute role={'teacher'} url='/405' />}>
               <Route path="/addPost" element={<AddPost />} />
