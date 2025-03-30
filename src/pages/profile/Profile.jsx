@@ -68,7 +68,8 @@ function Profile() {
           setUserData(userDoc.data());
         } else {
           alert("მონაცემები არ მოიძებნა");
-          navigate("/register");
+          handleSignOut();
+          navigate("/login");
         }
       } catch (error) {
         console.error("Error fetching user data: ", error);
@@ -187,10 +188,6 @@ function Profile() {
       classGroups: formData.classGroups.filter((_, i) => i !== index)
     });
   };
-
-  useEffect(() => {
-    console.log(formData);
-  }, [formData])
 
   const handleRegister = async (e) => {
     e.preventDefault();

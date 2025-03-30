@@ -22,6 +22,7 @@ function Register() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,6 +30,9 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -47,10 +51,12 @@ function Register() {
       });
 
       alert("რეგისტრაცია წარმატებით გაიარეთ");
-      navigate("/profile");
+      navigate("/login");
     } catch (error) {
       console.error("Error registering user: ", error);
       alert("რეგისტრაციისას დაფიქსირდა შეცდომა");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,8 +137,8 @@ function Register() {
           required
         />
 
-        <button type="submit" className="register-btn">
-          რეგისტრაცია
+        <button type="submit" className="register-btn" disabled={loading}>
+          {loading ? "მიმდინარეობს რეგისტრაცია..." : "რეგისტრაცია"}
         </button>
       </form>
       <button onClick={() => navigate('/login')} className="reset-btn"> შესასვლელად დააჭირეთ აქ</button>

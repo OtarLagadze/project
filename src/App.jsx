@@ -89,7 +89,7 @@ function App() {
       <div className="mainRender">
         {!loading && 
         <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Posts />}/>
 
             <Route element={<PrivateRoute role={'teacher'} url='/405' />}>
               <Route path="/addPost" element={<AddPost />} />
