@@ -18,12 +18,12 @@ function Navbar() {
   return (
     <nav className='navbar'>
         <div>
+          <ProfileLink />
             {
               data.map((props, ind) => {
                 return <NavElement {...props} key={ind} />
               })
             }
-            <ProfileLink />
         </div>
     </nav>
   )

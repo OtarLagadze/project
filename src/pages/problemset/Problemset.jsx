@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import './Problemset.scss'
 import { Link, useParams } from "react-router-dom"
 import { useSelector } from 'react-redux';
-import { selectUserRole } from '@features/userSlice';
+import { selectUserRole, selectUserVerified } from '@features/userSlice';
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '@src/firebaseInit';
 
 function Problemset() {
   const userRole = useSelector(selectUserRole);
+  const userVerified = useSelector(selectUserVerified);
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalProblems, setTotalProblems] = useState(0);
@@ -22,7 +23,15 @@ function Problemset() {
         const ref = collection(db, `problems`);
         const high = (await getDoc(doc(db, 'problems', 'countDoc'))).data().count - (pageId - 1) * pageProblemCount;
         const low = high - pageProblemCount + 1;
-        const res = await getDocs(query(ref, orderBy('problemId', 'desc'), where('problemId', '>=', low), where('problemId', '<=', high)));
+        const res = await getDocs(
+          query(
+            ref,
+            orderBy('problemId', 'desc'),
+            where('problemId', '>=', low),
+            where('problemId', '<=', high),
+            where('access', 'in', userRole === 'teacher' && userVerified ? ['სატესტო', 'საჯარო'] : ['საჯარო'])
+          )
+        );
         const obj = res.docs.map((doc) => {
           const val = doc.data();
           return {
@@ -36,7 +45,8 @@ function Problemset() {
             number: val.problemId,
             solutions: val.solutions,
             variants: val.variants,
-            subject: val.subject
+            subject: val.subject,
+            access: val.access,
           }
         })
         setProblems(obj);
@@ -58,11 +68,11 @@ function Problemset() {
         <div className="header">
           <p>ყველა ამოცანა</p>
           { userRole === 'teacher' && 
-            <div className='problemAddProblem'>
+            <button className='problemAddProblem'>
               <Link to='/addProblem'>ამოცანის დამატება</Link>
-            </div>
+            </button>
           }
-          <input type='text' placeholder='ნომრით ძებნა'/>
+          {/* <input type='text' placeholder='ნომრით ძებნა'/> */}
         </div>
 
         <div className="problems">
@@ -74,7 +84,7 @@ function Problemset() {
             <div className='problemChilds' id="count"></div>
           </div>
           {
-            problems.map(({difficulty, number, name, subject, grade}, ind) => {
+            problems.map(({difficulty, number, name, subject, grade, access}, ind) => {
               return (
                 <Link to={`/problemset/problem/${number}`} className="problem" key={ind}>
                   <div className='problemChilds' id="difficulty"
@@ -83,7 +93,7 @@ function Problemset() {
                     }}
                     ></div>
 
-                  <div className='problemChilds' id="id">{number}</div>
+                  <div className='problemChilds' id="id" style={{color: (access === 'სატესტო' ? 'red' : '')}}>{number}</div>
                   <div className='problemChilds' id="name">{name}</div>
                   <div className='problemChilds' id="subject">{subject}</div>
                   <div className='problemChilds' id="grade">{grade}</div>

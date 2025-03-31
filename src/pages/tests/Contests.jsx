@@ -102,7 +102,7 @@ function Contests() {
         {userRole === 'teacher' && 
           <div className='postsAddPost'>
             <Link to='/addTest'>ტესტის ჩანიშვნა</Link>
-            <Link to='/createTest'>ტესტის შექმნა</Link>
+            <Link to='/createTest' style={{ marginLeft: '10px'}}>ტესტის შექმნა</Link>
           </div>
         }
         <div className='testsList'>

@@ -1,19 +1,25 @@
 import { db } from '@src/firebaseInit';
-import { doc, getDoc, collection, addDoc, setDoc, serverTimestamp } from 'firebase/firestore'; // Import `collection` and `addDoc`
+import { doc, getDoc, collection, addDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import TestProblem from './TestProblem';
 import TestInstruction from '@components/TestInstruction';
 import './testRunning.scss';
 import ProblemReply from '@components/problemReply/ProblemReply';
-import { selectUserName } from '@features/userSlice';
+import { selectUserId, selectUserName, selectUserRole, selectUserVerified } from '@features/userSlice';
 import { useSelector } from 'react-redux';
 
 function TestRunning({ timeLeft, subject, maxPoint }) {
   const { testId } = useParams();
+  const userId = useSelector(selectUserId);
   const username = useSelector(selectUserName);
+  const userRole = useSelector(selectUserRole);
+  const userVerified = useSelector(selectUserVerified);
+  const navigate = useNavigate();
   const [data, setData] = useState({});
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [test, setTest] = useState([]);
   const [popupVisible, setPopupVisible] = useState(false);
 
@@ -22,10 +28,13 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
       try {
         const ref = doc(db, 'tests', testId);
         const res = await getDoc(ref);
+
+        if (!res.exists()) navigate('/404');
+
         const testData = res.data();
         setData(testData);
 
-        const savedTest = localStorage.getItem(`${username}_test_${testId}`);
+        const savedTest = localStorage.getItem(`${userId}_test_${testId}`);
         if (savedTest) {
           setTest(JSON.parse(savedTest));
         } else {
@@ -33,6 +42,8 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
         }
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -51,14 +62,14 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
       }
     });
 
-    localStorage.setItem(`${username}_test_${testId}`, JSON.stringify(generatedTest));
+    localStorage.setItem(`${userId}_test_${testId}`, JSON.stringify(generatedTest));
     setTest(generatedTest);
   };
 
   const handleSubmit = async () => {
     setPopupVisible(true);
     try {
-      const userTestRecordRef = doc(db, 'userTestRecords', username);
+      const userTestRecordRef = doc(db, 'userTestRecords', userId);
       let usersPoint = 0;
       messages.forEach(msg => {
         if (msg.message.evaluator.pointsEarned) usersPoint += msg.message.evaluator.pointsEarned;
@@ -89,6 +100,16 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
   const closePopup = () => {
     setPopupVisible(false);
   };
+
+  useEffect(() => {
+    if (!loading && data) {
+      if (data.access === 'სატესტო' && !(userRole === 'teacher' && userVerified)) {
+        navigate('/405');
+      }
+    }
+  }, [loading, data, userRole, userVerified, navigate]);
+
+  if (loading) return <div>იტვირთება...</div>
 
   return (
     <div>

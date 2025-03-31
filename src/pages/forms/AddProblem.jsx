@@ -14,9 +14,9 @@ import { MathJax } from 'better-react-mathjax';
 function AddProblem() {
   const userName = useSelector(selectUserName);
 
-  const subjects = ['მათემატიკა', 'ქართული', 'ინგლისური', 'ისტორია',
+  const subjects = ['მათემატიკა', 'ქართული', 'ინგლისური', 'რუსული', 'ისტორია',
   'გეოგრაფია', 'ფიზიკა', 'ქიმია', 'ბიოლოგია', 'ხელოვნება',
-  'მუსიკა', 'მოქალაქეობა', 'რუსული'];
+  'მუსიკა', 'მოქალაქეობა'];
   const problemTypes = ['ვარიანტების არჩევა', 'შესაბამისობა', 'დალაგება', 'რიცხვის ჩაწერა', 'ფოტოს ამოცნობა', 'გამოტოვებული სიტყვები', 'ტექსტური'];
   const [problemPhoto, setProblemPhoto] = useState('');
   const template = {

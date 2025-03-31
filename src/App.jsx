@@ -110,6 +110,8 @@ function App() {
             <Route element={<PrivateRoute role={'nonGuest'} url='/401'/>}>
               <Route path="/class" element={<Class />} />
               <Route path="/tests/:pageId" element={<Contests />} />
+              <Route path="/tests/tests/:testId" element={<TestDistributor />} />
+              <Route path="/tests/test/:testId" element={<TestRunning />} />
             </Route>
 
             <Route element={<PrivateRoute role={'containClass'} url='/405'/>}>
@@ -122,9 +124,6 @@ function App() {
 
             <Route path="/problemset/:pageId" element={<Problemset />} />
             <Route path="/problemset/problem/:problemId" element={<ProblemsetProblem />} />
-
-            <Route path="/tests/tests/:testId" element={<TestDistributor />} />
-            <Route path="/tests/test/:testId" element={<TestRunning />} />
 
             <Route path="/sports" element={<Sports />} />
             <Route path="/chat" element={<Chat />} />

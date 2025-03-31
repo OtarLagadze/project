@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from "react-router-dom"
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '@src/firebaseInit';
+import { useSelector } from 'react-redux';
+import { selectUserRole, selectUserVerified } from '@features/userSlice';
 
 function TestsList() {
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalTests, setTotalTests] = useState(0);
+  const userRole = useSelector(selectUserRole);
+  const userVerified = useSelector(selectUserVerified);
   const pageProblemCount = 20;
 
   let { pageId } = useParams();
@@ -18,14 +22,22 @@ function TestsList() {
         const ref = collection(db, `tests`);
         const high = (await getDoc(doc(db, 'tests', 'countDoc'))).data().count - (pageId - 1) * pageProblemCount;
         const low = high - pageProblemCount + 1;
-        const res = await getDocs(query(ref, orderBy('testId', 'desc'), where('testId', '>=', low), where('testId', '<=', high)));
+        const allowedAccess = (userRole === 'teacher' && userVerified) ? ['სატესტო', 'საჯარო'] : ['საჯარო'];
+        const res = await getDocs(query(
+          ref,
+          orderBy('testId', 'desc'),
+          where('testId', '>=', low),
+          where('testId', '<=', high),
+          where('access', 'in', allowedAccess)
+        ));
         const obj = res.docs.map((doc) => {
           const val = doc.data();
           return {
             grade: val.grade,
             name: val.name,
             number: val.testId,
-            subject: val.subject
+            subject: val.subject,
+            access: val.access,
           }
         })
         setTests(obj);
@@ -46,7 +58,7 @@ function TestsList() {
       <div className="list">
         <div className="header">
           <p>ყველა ტესტი</p>
-          <input type='text' placeholder='ნომრით ძებნა'/>
+          {/* <input type='text' placeholder='ნომრით ძებნა'/> */}
         </div>
 
         <div className="problems">
@@ -57,10 +69,10 @@ function TestsList() {
             <div className='problemChilds' id="grade">კლასი</div>
           </div>
           {
-            tests.map(({number, name, subject, grade}, ind) => {
+            tests.map(({number, name, subject, grade, access}, ind) => {
               return (
                 <Link to={`/tests/test/${number}`} className="problem" key={ind}>
-                  <div className='problemChilds' id="id">{number}</div>
+                  <div className='problemChilds' id="id" style={{color: (access === 'სატესტო' ? 'red' : '')}}>{number}</div>
                   <div className='problemChilds' id="name">{name}</div>
                   <div className='problemChilds' id="subject">{subject}</div>
                   <div className='problemChilds' id="grade">{grade}</div>

@@ -3,8 +3,9 @@ import './ProblemsetProblem.scss'
 // import '../forms/AddPost.scss'
 // import '../forms/AddProblem.scss'
 import { useParams } from 'react-router'
+import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
-import { selectUserId } from '@features/userSlice';
+import { selectUserId, selectUserRole, selectUserVerified } from '@features/userSlice';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@src/firebaseInit';
 import Workplace from '@components/workplace/Workplace';
@@ -16,22 +17,36 @@ function ProblemsetProblem() {
   const [loading, setLoading] = useState(true);
   const [replyData, setReplyData] = useState(null);
   const { problemId } = useParams();
+  const userRole = useSelector(selectUserRole);
+  const userVerified = useSelector(selectUserVerified);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchProblem = async () => {
       try {
         const ref = doc(db, 'problems', problemId);
         const res = await getDoc(ref);
-        setData(res.data());
+        if (res.exists()) {
+          setData(res.data());
+        } else {
+          navigate('/404');
+        }
       } catch (err) {
-        console.log(err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
+    };
+    fetchProblem();
+  }, [problemId]);
+
+  useEffect(() => {
+    if (!loading && data) {
+      if (data.access === 'სატესტო' && !(userRole === 'teacher' && userVerified)) {
+        navigate('/405');
+      }
     }
-        
-    fetch();
-  }, [problemId])
+  }, [loading, data, userRole, userVerified, navigate]);
   
   return (
     <> { !loading &&

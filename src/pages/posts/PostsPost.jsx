@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import './PostsPost.scss'
 import { useSelector } from 'react-redux';
 import { selectUserId, selectUserName, selectUserPhotoUrl } from '@features/userSlice';
@@ -15,12 +16,15 @@ function PostsPost() {
     const [data, setData] = useState();
     const [comments, setComments] = useState([]);
     const [addComment, setAddComment] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetch = async () => {
             try {
                 const ref = doc(db, 'posts', postId);
                 const res = await getDoc(ref);
+                
+                if (!res.exists()) navigate('/404')
 
                 setData(res.data());
 

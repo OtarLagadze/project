@@ -64,7 +64,7 @@ function TestResults() {
             <TestProblem problemId={testItem.exerciseId} numero={index + 1}/>
             <div className='problemContainer'>
               {message.message && (
-                  <ProblemReply replyData={message.message}/>
+                <ProblemReply replyData={message.message}/>
               )}
             </div>
           </div>
