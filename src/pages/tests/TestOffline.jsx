@@ -5,12 +5,12 @@ import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import TestProblem from './TestProblem';
 import TestInstruction from '@components/TestInstruction';
-import './testRunning.scss';
+import './TestRunning.scss';
 import ProblemReply from '@components/problemReply/ProblemReply';
 import { selectUserId, selectUserName, selectUserRole, selectUserVerified } from '@features/userSlice';
 import { useSelector } from 'react-redux';
 
-function TestRunning({ timeLeft, subject, maxPoint }) {
+function TestOffline() {
   const { testId } = useParams();
   const userId = useSelector(selectUserId);
   const username = useSelector(selectUserName);
@@ -21,7 +21,7 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [test, setTest] = useState([]);
-  const [submitted, setSubmitted] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   useEffect(() => {
     const fetchTestData = async () => {
@@ -66,40 +66,13 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
     setTest(generatedTest);
   };
 
-  const handleSubmit = async () => {
-    if (submitted) return;
-    setSubmitted(true);
-    try {
-      const userTestRecordRef = doc(db, 'userTestRecords', userId);
-      let usersPoint = 0;
-      messages.forEach(msg => {
-        if (msg?.message?.evaluator?.pointsEarned) usersPoint += msg.message.evaluator.pointsEarned;
-      });
-      const testRecord = {
-        [subject]: {
-          testId,
-          messages,
-          maxPoint,
-          usersPoint,
-          lastUpdated: serverTimestamp(),
-        },
-      };
-      await setDoc(userTestRecordRef, testRecord, { merge: true });
-      console.log('Test record updated successfully:', testRecord);
-    } catch (error) {
-      console.error('Error updating test record:', error);
-    } finally {
-      window.location.reload();
-    }
-  };
-
   useEffect(() => {
-    if (timeLeft === '1წმ') {
-      handleSubmit();
+    if (!loading && data) {
+      if (data.access === 'სატესტო' && !(userRole === 'teacher' && userVerified)) {
+        navigate('/405');
+      }
     }
-    console.log(timeLeft);
-  }, [timeLeft]);
-
+  }, [loading, data, userRole, userVerified, navigate]);
 
   if (loading) return <div>იტვირთება...</div>
 
@@ -117,12 +90,6 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
         </div>
       </div>
       <TestInstruction instructionId={data.instructionId} />
-      {timeLeft && (
-        <div className="testPopup">
-          <small>დარჩენილია</small>
-          <h1>{timeLeft}</h1>
-        </div>
-      )}
       {test ? (
         test.map(({ exerciseId }, ind) => {
           return (
@@ -137,10 +104,7 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
       ) : (
         <></>
       )}
-      <div className="problemSubmit" id="edgeCaseButton">
-        <button onClick={handleSubmit}>დასრულება</button>
-      </div>
-      {/* {messages.map(({ problemNumero, message }, ind) => {
+      {messages.map(({ problemNumero, message }, ind) => {
         if (!message) return null;
         return (
           <div className="problemContainer" key={ind}>
@@ -150,9 +114,9 @@ function TestRunning({ timeLeft, subject, maxPoint }) {
             <ProblemReply replyData={message} />
           </div>
         );
-      })} */}
+      })}
     </div>
   );
 }
 
-export default TestRunning;
+export default TestOffline;

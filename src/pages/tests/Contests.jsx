@@ -57,7 +57,7 @@ function Contests() {
       let q;
       if (userRole === 'teacher') {
         q = query(collection(db, 'testRecords'), where('teacher', '==', userName));
-      } else if (userRole === 'student') {
+      } else if (userRole === 'pupil') {
         q = query(collection(db, 'testRecords'), where('classId', '==', userClassId));
       }
       if (q) {

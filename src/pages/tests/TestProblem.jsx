@@ -7,7 +7,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 function TestProblem({ problemId, numero, setMessages }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [replyData, setReplyData] = useState(null);
+  const [replyData, setReplyData] = useState({skipped: true});
 
   useEffect(() => {
     if (!setMessages) return;

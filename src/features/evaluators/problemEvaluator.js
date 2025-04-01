@@ -138,6 +138,10 @@ function evaluateNumber(data) {
 }
 
 export function evaluateProblem(data) {
+  if (!data.submission) return {
+    pointsEarned: 0,
+    verdict: ["ცარიელია"]
+  }
   switch (data.type) {
     case 'ვარიანტების არჩევა':
       return evaluateMultipleChoice(data);

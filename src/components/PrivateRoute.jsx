@@ -20,6 +20,10 @@ function PrivateRoute({ role, url }) {
     if (userClassGroups.some(item => item.class_uid === params.class_uid && item.subject_uid === params.subject_uid)) {
       pass = true;
     }
+    if (userClassId === params.classId) pass = true;
+    if (userClassGroups.some(item => item.classId === params.classId && item.subject === params.subject)) {
+      pass = true;
+    }
     if (userRole === 'teacher') pass = true;
   }
 

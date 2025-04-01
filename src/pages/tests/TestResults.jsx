@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { db } from '@src/firebaseInit';
 import { doc, getDoc } from 'firebase/firestore';
-import { selectUserName } from '@features/userSlice';
+import { selectUserId, selectUserName } from '@features/userSlice';
 import TestProblem from './TestProblem';
 import ProblemReply from '@components/problemReply/ProblemReply';
 import './testResults.scss'
@@ -11,13 +11,14 @@ import './testResults.scss'
 function TestResults() {
   const { subject } = useParams(); 
   const userName = useSelector(selectUserName); 
+  const userId = useSelector(selectUserId);
   const [subjectData, setSubjectData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSubjectData = async () => {
       try {
-        const userDocRef = doc(db, 'userTestRecords', userName);
+        const userDocRef = doc(db, 'userTestRecords', userId);
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
@@ -49,26 +50,34 @@ function TestResults() {
     );
   }
 
-  const { test, messages, maxPoint, usersPoint } = subjectData;
+  const { messages, maxPoint, usersPoint } = subjectData;
+
+  const sortedMessages = messages ? [...messages].sort((a, b) => a.problemNumero - b.problemNumero) : [];
 
   return (
     <div>
       <div className='problemContainer' id='finalPoints'>
         <h1>თქვენ აიღეთ {usersPoint} ქულა {maxPoint}-დან</h1>
-        <h2>ეს არის ტესტის პირველი ნაწილის შეფასება. ამ ქულას დაემატება ფურცელზე დაწერილი ტესტის ქულები. ქვემოთ იხილავთ თქვენი ვარიანტის ამოცანებს და თქვენს მიერ ატვირთულ პასუხებს. პასუხები შესწორებულია კომპიუტერის მიერ. მწვანე ნიშნავს სწორს, წითელი არასწორს. შეკითხვების შემთხვევაში მოგვწერეთ ფეისბუკზე: Neo School. დაიმახსოვრეთ კოდი და შეძლებთ საიტზე სახლიდანაც შეხვიდეთ და გადახედოთ თქვენს ნაშრომს. საიტის ლინკი იქნება ჩვენს ფეისბუკზე.</h2>
+        <h1>თქვენ {usersPoint < 10 ? 'ვერ' : ''} გადახვედით შემდეგ ტურში</h1>
+        <h2>ქვემოთ იხილავთ თქვენს მიერ ატვირთულ პასუხებს, რომლებიც შესწორებულია კომპიუტერის მიერ. მწვანე ნიშნავს სწორს, ხოლო წითელი არასწორს. შეკითხვების შემთხვევაში მოგვწერეთ ფეისბუკზე: Neo School</h2>
       </div>
-      {test.map((testItem, index) => {
-        const message = messages.find(msg => msg.problemNumero === index + 1);
+      {sortedMessages.map((child, index) => {
         return (
           <div key={index} className="resultSection">
-            <TestProblem problemId={testItem.exerciseId} numero={index + 1}/>
             <div className='problemContainer'>
-              {message.message && (
-                <ProblemReply replyData={message.message}/>
-              )}
+              <h1>№{child.problemNumero}</h1>
+              {child?.message?.skipped === true ? 
+                <h1 key={index}> ცარიელია</h1> 
+                :
+                <>
+                  {child.message && (
+                    <ProblemReply replyData={child.message}/>
+                  )}
+                </>
+              }
             </div>
           </div>
-        );
+        )
       })}
     </div>
   );

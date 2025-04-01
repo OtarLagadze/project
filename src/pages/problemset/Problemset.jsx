@@ -29,7 +29,7 @@ function Problemset() {
             orderBy('problemId', 'desc'),
             where('problemId', '>=', low),
             where('problemId', '<=', high),
-            where('access', 'in', userRole === 'teacher' && userVerified ? ['სატესტო', 'საჯარო'] : ['საჯარო'])
+            where('access', 'in', ((userRole === 'teacher' && userVerified) ? ['სატესტო', 'საჯარო'] : ['სატესტო', 'საჯარო'])),
           )
         );
         const obj = res.docs.map((doc) => {

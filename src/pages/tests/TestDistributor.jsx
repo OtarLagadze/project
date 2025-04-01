@@ -6,6 +6,31 @@ import { formatTimeLeft } from '@features/formatTimeLeft';
 import TestCountdown from './TestCountdown';
 import TestRunning from './TestRunning';
 import TestResults from './TestResults';
+import { useSelector } from 'react-redux';
+import { selectUserId } from '@features/userSlice';
+
+function RunningDistributor({timeLeft, subject, maxPoint}) {
+  const userId = useSelector(selectUserId);
+  const [recordExists, setRecordExists] = useState(null);
+
+  useEffect(() => {
+    const checkUserTestRecord = async () => {
+      if (!userId) return;
+      try {
+        const recordDoc = await getDoc(doc(db, "userTestRecords", userId));
+        setRecordExists(recordDoc.exists());
+      } catch (error) {
+        console.error("Error checking user test record:", error);
+        setRecordExists(false);
+      }
+    };
+    checkUserTestRecord();
+  }, [userId]);
+
+  return recordExists 
+    ? <TestResults />
+    : <TestRunning timeLeft={timeLeft} subject={subject} maxPoint={maxPoint} />;
+}
 
 function TestDistributor() {
   const { classId, recordId } = useParams();
@@ -61,7 +86,8 @@ function TestDistributor() {
     case 'countdown':
       return <TestCountdown testData={data} display={countdown}/>
     case 'running':
-      return <TestRunning timeLeft={countdown} subject={data.testData.name} maxPoint={data.testData.maxPoint}/>
+      return <RunningDistributor timeLeft={countdown} subject={data.subject} maxPoint={data.testData.maxPoint}/> 
+      // return <TestRunning timeLeft={countdown} subject={data.subject} maxPoint={data.testData.maxPoint}/>
     case 'finished':
       return <TestResults />
     default:

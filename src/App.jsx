@@ -30,6 +30,7 @@ import TestDistributor from "@pages/tests/TestDistributor";
 import TestRunning from "@pages/tests/TestRunning";
 import Register from "@pages/auth/Register";
 import Login from "@pages/auth/Login";
+import TestOffline from "@pages/tests/TestOffline";
 
 function App() {
   const [active, setActive] = useState(true);
@@ -110,8 +111,9 @@ function App() {
             <Route element={<PrivateRoute role={'nonGuest'} url='/401'/>}>
               <Route path="/class" element={<Class />} />
               <Route path="/tests/:pageId" element={<Contests />} />
-              <Route path="/tests/tests/:testId" element={<TestDistributor />} />
-              <Route path="/tests/test/:testId" element={<TestRunning />} />
+              {/* <Route path="/tests/tests/:testId" element={<TestDistributor />} /> */}
+              <Route path="/tests/view/:testId" element={<TestOffline />} />
+              {/* <Route path="/tests/test/:testId" element={<TestDistributor />} /> */}
             </Route>
 
             <Route element={<PrivateRoute role={'containClass'} url='/405'/>}>

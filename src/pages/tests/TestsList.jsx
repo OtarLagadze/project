@@ -71,7 +71,7 @@ function TestsList() {
           {
             tests.map(({number, name, subject, grade, access}, ind) => {
               return (
-                <Link to={`/tests/test/${number}`} className="problem" key={ind}>
+                <Link to={`/tests/view/${number}`} className="problem" key={ind}>
                   <div className='problemChilds' id="id" style={{color: (access === 'სატესტო' ? 'red' : '')}}>{number}</div>
                   <div className='problemChilds' id="name">{name}</div>
                   <div className='problemChilds' id="subject">{subject}</div>
