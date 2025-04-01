@@ -104,7 +104,7 @@ function TestOffline() {
       ) : (
         <></>
       )}
-      {messages.map(({ problemNumero, message }, ind) => {
+      {/* {messages.map(({ problemNumero, message }, ind) => {
         if (!message) return null;
         return (
           <div className="problemContainer" key={ind}>
@@ -114,7 +114,7 @@ function TestOffline() {
             <ProblemReply replyData={message} />
           </div>
         );
-      })}
+      })} */}
     </div>
   );
 }
