@@ -48,7 +48,7 @@ function AddPost() {
       const obj = {
         number: num + 1,
         author: userName,
-        authorImage: userImage,
+        authorImage: userImage || "No Image",
         date: serverTimestamp(),
         name: postName,
         postPhotos: photos,

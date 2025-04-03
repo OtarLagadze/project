@@ -18,7 +18,12 @@ function RunningDistributor({timeLeft, subject, maxPoint}) {
       if (!userId) return;
       try {
         const recordDoc = await getDoc(doc(db, "userTestRecords", userId));
-        setRecordExists(recordDoc.exists());
+        if (recordDoc.exists()) {
+          const data = recordDoc.data();
+          setRecordExists(data.hasOwnProperty(subject));
+        } else {
+          setRecordExists(false);
+        }
       } catch (error) {
         console.error("Error checking user test record:", error);
         setRecordExists(false);

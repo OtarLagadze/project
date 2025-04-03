@@ -5,6 +5,7 @@ import './PostsPost.scss'
 import { useSelector } from 'react-redux';
 import { selectUserId, selectUserName, selectUserPhotoUrl } from '@features/userSlice';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import TextareaAutosize from 'react-textarea-autosize';
 import { db } from '@src/firebaseInit';
 
 function PostsPost() {
@@ -93,7 +94,7 @@ function PostsPost() {
             <div className='postContainer'>
                 <div className="postHeader">
                     <div className="postHeaderImg">
-                        {data.authorImage && <img src={data.authorImage} alt='photo'/> }
+                        {(data.authorImage && data.authorImage !== "No Image") && <img src={data.authorImage} alt='photo'/> }
                     </div>
                     <div className="postHeaderTxt">
                         <h1>{data.name}</h1>
@@ -103,8 +104,13 @@ function PostsPost() {
                         </div>
                     </div>
                 </div>
-
-                <p className='postTxt'>{data.postText}</p>
+                <div className="problemStatement">
+                    <TextareaAutosize 
+                        type='text'
+                        value={data.postText}
+                        readOnly
+                    />
+                </div>
 
                 <div className="postPhotoHolder">
                     {
