@@ -60,7 +60,7 @@ function TestProblem({ problemId, numero, setMessages }) {
               {
                 data.photos.map((obj, ind) => {
                   return (
-                    <img src={obj.src} key={ind} alt='img' className='problemsetImg' style={{height: '350px'}}/>
+                    <img src={obj.src} key={ind} alt='img' className='problemsetImg' style={{ height: '350px', maxWidth: '100%'}}/>
                   )
                 })
               }
