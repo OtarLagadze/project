@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { db } from '@src/firebaseInit';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import TestsList from './TestsList';
+import Export from './Export';
 
 const formatDate = (date) => {
   const options = { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
@@ -111,6 +112,7 @@ function Contests() {
           <TestsRow testType={'დასრულებული'} arr={tests.finished}/>
         </div>
       </div>
+      {/* {userName === "Neo School" && <Export /> } */}
       <TestsList />
     </>
   );
